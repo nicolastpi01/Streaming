@@ -17,7 +17,8 @@
     "react-scripts": "3.4.1",
     "typescript": "^3.7.5",
     "core-js": "^2.6.5",
-    "video-react": "0.14.0"
+    "video-react": "0.14.0",
+    "fetch": "1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

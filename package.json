@@ -18,7 +18,7 @@
     "typescript": "^3.7.5",
     "core-js": "^2.6.5",
     "video-react": "0.14.0",
-    "fetch": "1.1.0",
+    "axios": "^0.19.2",
     "react-bootstrap":"1.0.0",
     "bootstrap":"4.4.1"
   },

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Player , ControlBar, BigPlayButton, LoadingSpinner,CurrentTimeDisplay ,TimeDivider} from 'video-react';
+import ReactPlayer from 'react-player';
 //import logo from '../logo.svg';
 //import { Stream } from 'stream';
 //import {Button} from 'react-bootstrap';
@@ -42,7 +42,7 @@ const Home : React.FC = () => {
     
     function onCambioVideo(newNumber:number) {
         setidvideo(newNumber);
-        reproductor.load();
+        //reproductor.load();
     }
 
     return <div>
@@ -53,23 +53,23 @@ const Home : React.FC = () => {
         </select>
 
         <div>
-        <Player
+        <ReactPlayer
           ref={ (player:any) => setreproductor(player) }
           fluid={true}
-          inline
+          url={sourceurl(idvideo.toString())}
+          controls={true}
           >
-          <source src={sourceurl(idvideo.toString())} />
-          <ControlBar autoHide={true}>
-            <CurrentTimeDisplay order={4.1} />
-            <TimeDivider order={4.2} />
-            <BigPlayButton position="center" order={4.3}/>
-            <LoadingSpinner order={4.4}/>
-          </ControlBar>
-        </Player>
+        </ReactPlayer>
         </div>
         
       </header>
       </div>
 }
 
+/*          <ControlBar autoHide={true}>
+            <CurrentTimeDisplay order={4.1} />
+            <TimeDivider order={4.2} />
+            <BigPlayButton position="center" order={4.3}/>
+            <LoadingSpinner order={4.4}/>
+          </ControlBar> */
 export default Home

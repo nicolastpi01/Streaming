@@ -8,12 +8,12 @@ import axios from 'axios';
 import { VideosResult } from '../types/VideosResult';
 
 const Home : React.FC = () => {
-    const [idvideo, setidvideo] = React.useState<number>(0)
+    const [idvideo, setidvideo] = React.useState<number|undefined>()
     const [reproductor,setreproductor] = React.useState<any|undefined>()
     const [catalogo, setCatalogo] = React.useState<VideosResult[]>([]);
     //const [fuente, setfuente] = React.useState<ReadableStream>()
 
-    useEffect(() => {
+    useEffect(() => {//TODO:refactor y delegacion de responsabilidad
       console.log("fuera")
       axios.get("https:\\localhost:5001/api/Video/videos",	{ headers: {
         'Access-Control-Allow-Origin': '*' //,
@@ -30,7 +30,7 @@ const Home : React.FC = () => {
           setCatalogo( response );
       }
     )
-    .catch(function(err) {
+    .catch(function(err) { //TODO:Reemplazar por componente visual
       console.log(err);
     });
       
@@ -56,7 +56,7 @@ const Home : React.FC = () => {
         <ReactPlayer
           ref={ (player:any) => setreproductor(player) }
           fluid={true}
-          url={sourceurl(idvideo.toString())}
+          url={idvideo !==undefined?sourceurl(idvideo.toString()):""}
           controls={true}
           >
         </ReactPlayer>

@@ -4,7 +4,7 @@ import './App.css';
 import { Switch, Route, Router} from 'react-router';
 import Profile from "./components/Profile";
 import history from "./utils/history";
-
+import PrivateRoute from "./components/PrivateRoute";
 import Home from './containers/Home';
 import { BrowserRouter, Link } from 'react-router-dom';
 import { useAuth0 } from "./react-auth0-spa";
@@ -57,7 +57,7 @@ const App : React.FC = () => {
         </Container>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/profile" component={Profile} />
+          <PrivateRoute path="/profile" component={Profile} />
         </Switch>
       </Router>
     </Row>

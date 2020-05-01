@@ -1,14 +1,16 @@
 import React from 'react';
-import {Navbar, Nav, NavDropdown, Form, FormControl, Button, Row, Container} from 'react-bootstrap';
+import {Navbar, Nav, NavDropdown, Form, FormControl, Button, Row, Container, Col} from 'react-bootstrap';
 import './App.css';
 import { Switch, Route, Router} from 'react-router';
 import Profile from "./components/Profile";
 import history from "./utils/history";
 import PrivateRoute from "./components/PrivateRoute";
 import Home from './containers/Home';
+import NewUser from './containers/Register'
 import { BrowserRouter, Link } from 'react-router-dom';
 import { useAuth0 } from "./react-auth0-spa";
 import { object } from 'prop-types';
+import Register from './containers/Register';
 
 const NavBarAuth0 = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -42,27 +44,32 @@ const App : React.FC = () => {
     return <p>Cargando.... </p> ;
   }
 
-  return (<>
-    <Row className="App">
+  return <>
+    <Container className="flex flex-grow-4 App" fluid >
       <Router history={history}>
-        <Container className="flex flex-grow-4" fluid>
-          <NavBarAuth0 />
-          <Navbar bg="dark" variant="light" >
-            <Navbar.Brand className="sm" href="#ome">Home</Navbar.Brand>
-            <Form inline>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-              <Button variant="outline-success">Search</Button>
-            </Form>
+          <Navbar className="row" bg="dark" variant="light" >
+            <Col lg={4} className="d-flex justify-content-left">
+              <Navbar.Brand className="sm" href="#home">Home</Navbar.Brand>
+            </Col>
+            <Col lg={true}>
+              <Form inline className="d-flex justify-content-center">
+                <FormControl type="text" placeholder="Search" className="mr-sm-2" />
+                <Button variant="outline-success">Search</Button>
+              </Form>
+            </Col>
+            <Col lg={true} className="d-flex justify-content-right">
+              <NavBarAuth0 />
+            </Col>
           </Navbar>
-        </Container>
+
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/register" component={Register}/>
           <PrivateRoute path="/profile" component={Profile} />
         </Switch>
       </Router>
-    </Row>
+      </Container>
     </>
-  );
 }
 
 export default App;

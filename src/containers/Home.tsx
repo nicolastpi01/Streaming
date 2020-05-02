@@ -54,7 +54,7 @@ const Home : React.FC = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       searchVideos(search).then(videos =>{
         setCatalogo(videos)
-        onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
+        //onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
         console.log(videos)
       }).catch(e => console.log("ERROR BUSCANDO LOS VIDEOS" + e))
       event.preventDefault();
@@ -72,11 +72,10 @@ const Home : React.FC = () => {
         
         <br></br>
         
-        <select value={search} defaultValue="" onSelect={e => console.log(e.currentTarget.value)}>
+        <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
             {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
         </select>
-         
-        
+
         <br></br>
         {/* 
         <select value={idvideo} defaultValue={0} onClick={e => onCambioVideo(parseInt(e.currentTarget.value)) }>
@@ -86,6 +85,7 @@ const Home : React.FC = () => {
 
         <div className="container-fluid">
           {
+            
             catalogo.length > 0 ? 
               catalogo.map(video =>    
               <div>
@@ -96,12 +96,11 @@ const Home : React.FC = () => {
                   controls={true}
                   >
                 </ReactPlayer>
-              </div> )
+              </div>)
              : <h1>No hay resultados para su busqueda</h1>
 
           }
-          
-
+   
         </div>
 
           {/* 

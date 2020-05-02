@@ -11,6 +11,8 @@ const Home : React.FC = () => {
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
 
+    const [show, setShow] = React.useState(false);
+
     useEffect(() => {//TODO:refactor y delegacion de responsabilidad
       console.log("fuera")
       axios.get("https:\\localhost:5001/api/video/videos",	{ headers: {
@@ -21,7 +23,8 @@ const Home : React.FC = () => {
           setCatalogo(response);
       }
     )
-    .catch(function(err) { //TODO:Reemplazar por componente visual
+    .catch(function(err) {
+      setShow(true);
       console.log(err);
     });
       
@@ -118,6 +121,5 @@ const Home : React.FC = () => {
       </header>
       </div>
 }
-
 
 export default Home

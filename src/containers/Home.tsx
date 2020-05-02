@@ -18,8 +18,6 @@ const Home : React.FC = () => {
         
       }
       }).then(response => response.data ).then( (response: VideosResult[])=>{
-          console.log("dentro")
-          console.log(response)
           setCatalogo(response);
       }
     )
@@ -72,30 +70,41 @@ const Home : React.FC = () => {
           <input type="submit" value="&#128269;"/>
         </form>
         
-        <br>
-        </br>
-        <br>
-        </br>
-        <br>
-        </br>
-        <br>
-        </br>
-        <br>
-        </br>
-
+        <br></br>
+        
         <select value={search} defaultValue="" onSelect={e => console.log(e.currentTarget.value)}>
             {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
         </select>
-
-        <br>
-        </br>
-        <br>
-        </br>
-
+         
+        
+        <br></br>
+        {/* 
         <select value={idvideo} defaultValue={0} onClick={e => onCambioVideo(parseInt(e.currentTarget.value)) }>
             {catalogo.length > 0? catalogo.map(el=><option value={el.indice}>{el.nombre}</option>): <option value={0}>Sin datos</option>}
         </select>
+          */}
 
+        <div className="container-fluid">
+          {
+            catalogo.length > 0 ? 
+              catalogo.map(video =>    
+              <div>
+                <ReactPlayer
+                  ref={(player:any) => setreproductor(player) }
+                  fluid={true}
+                  url={sourceurl(video.indice.toString())}
+                  controls={true}
+                  >
+                </ReactPlayer>
+              </div> )
+             : <h1>No hay resultados para su busqueda</h1>
+
+          }
+          
+
+        </div>
+
+          {/* 
         <div>
         <ReactPlayer
           ref={(player:any) => setreproductor(player) }
@@ -105,6 +114,7 @@ const Home : React.FC = () => {
           >
         </ReactPlayer>
         </div>
+        */}
         
       </header>
       </div>

@@ -8,4 +8,6 @@ const API = {
   post: (path, body) => axios.post(`${server}${path}`, body).then(response => response.data),
 };
 
-export default API;
+
+
+

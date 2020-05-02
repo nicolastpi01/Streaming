@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import { useAuth0 } from "../react-auth0-spa";
-import { number } from "prop-types";
 
 const Register = () => {
   const { loading, user } = useAuth0();
@@ -26,6 +25,8 @@ const Register = () => {
         <h2>{user.name}</h2>
         <p>{user.email}</p>
         <code>{JSON.stringify(user, null, 2)}</code>
+
+
         </div>
     );
 };

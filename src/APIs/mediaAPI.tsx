@@ -1,10 +1,9 @@
 
-export const getServerAndPort = () => {
-    return "https:\\localhost:5001/api/video"
-}
+export const getServerAndPort = "https:\\localhost:5001/api/video";
+
 
 export const searchSugestions = async (sugestions: string) => {
-    const sugestionsAPI =  getServerAndPort() + "/sugerencias?sugerencia=" + sugestions
+    const sugestionsAPI =  getServerAndPort + "/sugerencias?sugerencia=" + sugestions
 
     const response = await fetch(sugestionsAPI, {
         method: 'GET',
@@ -19,7 +18,7 @@ export const searchSugestions = async (sugestions: string) => {
 
 
 export const searchVideos = async (search: string) => {
-    const searchAPI = getServerAndPort() + "/search?busqueda=" + search
+    const searchAPI = getServerAndPort + "/search?busqueda=" + search
 
     const response = await fetch(searchAPI, {
         method: 'GET',

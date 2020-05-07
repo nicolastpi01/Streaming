@@ -2,31 +2,20 @@ import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import axios from 'axios';
 import { VideosResult } from '../types/VideosResult';
-import { searchSugestions, searchVideos } from '../APIs/mediaAPI';
+import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
 
 const Home : React.FC = () => {
-    const [idvideo, setidvideo] = React.useState<number|undefined>()
-    const [reproductor,setreproductor] = React.useState<any|undefined>()
-    const [catalogo, setCatalogo] = React.useState<VideosResult[]>([]);
+    const [idvideo, setidvideo] = useState<number>()
+    const [reproductor,setreproductor] = useState<any>()
+    const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
 
-    const [show, setShow] = React.useState(false);
+    const [show, setShow] = useState(false);
 
-    useEffect(() => {//TODO:refactor y delegacion de responsabilidad
-      console.log("fuera")
-      axios.get("https:\\localhost:5001/api/video/videos",	{ headers: {
-        'Access-Control-Allow-Origin': '*' 
-        
-      }
-      }).then(response => response.data ).then( (response: VideosResult[])=>{
-          setCatalogo(response);
-      }
-    )
-    .catch(function(err) {
-      setShow(true);
-      console.log(err);
-    });
+    useEffect(() => {
+      
+      getAllVideos()
       
     }, []);
 
@@ -35,8 +24,14 @@ const Home : React.FC = () => {
     }
     
     function onCambioVideo(newNumber:number) {
-        setidvideo(newNumber);
-        
+        setidvideo(newNumber);   
+    }
+
+    // Llama a la API que busca todos los videos
+    const getAllVideos = async() => {
+      searchAllVideos().then(results => {
+        setCatalogo(results)
+      }).catch((e) => {console.log(); setShow(true)} )
     }
 
     // Llama a la API que busca las sugerencias

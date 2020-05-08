@@ -10,12 +10,21 @@ const Home : React.FC = () => {
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
-
     const [show, setShow] = useState(false);
+
+    // FOR PAGINING
+    const [offset, setOffset] = useState<number>(1) // cantidad de videos por pagina
+    const [size, setSize] = useState<number>(0) // cantidad de videos totales
+    const [pages, setPages] = useState<number[]>([]) // todas las paginas, por ejemplo: [0,1,2,3,4,5,6]
+    const [currentPage, setCurrentpage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
+    const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
+    // FOR PAGINING
+
+    
 
     useEffect(() => {
       
-      getAllVideos()
+      getAllVideos(0)
       
     }, []);
 
@@ -28,15 +37,29 @@ const Home : React.FC = () => {
     }
 
     // Llama a la API que busca todos los videos
-    const getAllVideos = async() => {
-      searchAllVideos().then(results => {
-        setCatalogo(results)
+    const getAllVideos = async(page: number) => {
+      searchAllVideos(page).then(result => {
+        setCatalogo(result.page)
+        setOffset(result.offset)
+        setSize(result.size)
+        setPages(calculatePages(Math.ceil(result.size / result.offset)))
+        
       }).catch((e) => {console.log(); setShow(true)} )
+    }
+
+    const calculatePages = (cantPaginas: number) => {
+          var paginas :number[] = [];
+          for (var i = 0; i < cantPaginas; i++) {
+            paginas.push(i)
+         }
+          return paginas
     }
 
     // Llama a la API que busca las sugerencias
     const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-      console.log(event.target.value);
+      //console.log("Division con barra: " + Math.ceil(size / offset));
+      console.log(pages);
+      //console.log(event.target.value);
       setSearch(event.target.value);
       getSugestions();
     }
@@ -44,7 +67,7 @@ const Home : React.FC = () => {
     const getSugestions = async () => {
       searchSugestions(search).then(sugestions =>{
         setSearchSugestion(sugestions)
-        console.log(sugestions)
+        //console.log(sugestions)
       }).catch(e => console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e))
     }
   

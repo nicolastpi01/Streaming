@@ -29,7 +29,7 @@ export const searchVideos = async (search: string) => {
     return response.json()
 }
 
-export const searchAllVideos = async () => {
+export const searchAllVideos = async (page: number) =>  {
     const allAPI = getServerAndPort + "/videos"
 
     const response = await fetch(allAPI, {

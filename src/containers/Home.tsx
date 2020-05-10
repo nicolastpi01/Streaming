@@ -3,9 +3,10 @@ import ReactPlayer from 'react-player';
 import axios from 'axios';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
+import { CardGroup, Card, CardDeck } from 'react-bootstrap';
 
 const Home : React.FC = () => {
-    const [idvideo, setidvideo] = useState<number>()
+    
     const [reproductor,setreproductor] = useState<any>()
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
     const [search, setSearch] = useState<string>("")
@@ -28,14 +29,7 @@ const Home : React.FC = () => {
       
     }, []);
 
-    function sourceurl(id:string){
-        return "https://localhost:5001/api/Video/getFileById?fileId="+ id
-    }
     
-    function onCambioVideo(newNumber:number) {
-        setidvideo(newNumber);   
-    }
-
     // Llama a la API que busca todos los videos
     const getAllVideos = async(page: number) => {
       searchAllVideos(page).then(result => {
@@ -64,6 +58,7 @@ const Home : React.FC = () => {
       getSugestions();
     }
 
+    // Llama a la API para obtener las sugerencias
     const getSugestions = async () => {
       searchSugestions(search).then(sugestions =>{
         setSearchSugestion(sugestions)
@@ -81,62 +76,72 @@ const Home : React.FC = () => {
       event.preventDefault();
     }
 
+    function sourceurl(id: string){
+      return "https://localhost:5001/api/Video/getFileById?fileId="+ id
+    }
+
 
     return <div>
-      <header className="App-header">
-        
-        
-        <form onSubmit={handleSubmit}>
+      
+      <form onSubmit={handleSubmit}>
           <input type="text" value={search} onChange={handleChange}/>
           <input type="submit" value="&#128269;"/>
         </form>
         
-        <br></br>
+        
         
         <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
             {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
         </select>
 
         <br></br>
-        {/* 
-        <select value={idvideo} defaultValue={0} onClick={e => onCambioVideo(parseInt(e.currentTarget.value)) }>
-            {catalogo.length > 0? catalogo.map(el=><option value={el.indice}>{el.nombre}</option>): <option value={0}>Sin datos</option>}
-        </select>
-          */}
+        <br></br>
+        <br></br>
 
-        <div className="container-fluid">
+        <div className="row">
+          
+        
           {
             
             catalogo.length > 0 ? 
-              catalogo.map(video =>    
-              <div>
-                <ReactPlayer
-                  ref={(player:any) => setreproductor(player) }
-                  fluid={true}
-                  url={sourceurl(video.indice.toString())}
-                  controls={true}
-                  >
-                </ReactPlayer>
+              catalogo.map(video =>
+                
+                <div className="col-sm-3">
+                                              
+                    <Card style={{ height: '25rem' }}>
+                    
+                    <Card.Body>
+                      <Card.Title>{video.nombre}</Card.Title>
+                      
+                      <ReactPlayer style={{ }}
+                        ref={(player:any) => setreproductor(player) }
+                        width={"small"}
+                        height={"small"}
+                        url={sourceurl(video.indice.toString())}
+                        controls={true}
+                        fluid={true}
+                      >
+                      </ReactPlayer>    
+                      <Card.Text>
+                        {video.descripcion.slice(0,20)}
+                      </Card.Text>
+                    </Card.Body>
+                    <Card.Footer>
+                      <small className="text-muted">{video.autor}</small>
+                      <br></br>
+                      <small className="text-muted">Subido hace 15 minutos</small>
+                    </Card.Footer>
+                  </Card>   
               </div>)
              : <h1>No hay resultados para su busqueda</h1>
-
+              
           }
-   
-        </div>
+          
+          </div>
 
-          {/* 
-        <div>
-        <ReactPlayer
-          ref={(player:any) => setreproductor(player) }
-          fluid={true}
-          url={idvideo !==undefined?sourceurl(idvideo.toString()) :""}
-          controls={true}
-          >
-        </ReactPlayer>
-        </div>
-        */}
-        
-      </header>
+      <br></br>
+      <br></br>
+      <br></br>
       </div>
 }
 

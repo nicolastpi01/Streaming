@@ -41,3 +41,15 @@ export const searchAllVideos = async (page: number) =>  {
     return response.json()
 }
 
+export const searchVideo = async (id: string) : Promise<string> =>  {
+    const mediaByIdAPI = getServerAndPort + "/getFileById?fileId=" + id
+
+    const response = await fetch(mediaByIdAPI, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    return response.json()
+}
+

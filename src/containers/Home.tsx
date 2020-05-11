@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import axios from 'axios';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
 import { CardGroup, Card, CardDeck } from 'react-bootstrap';
@@ -82,17 +81,17 @@ const Home : React.FC = () => {
 
 
     return <div>
-      
-      <form onSubmit={handleSubmit}>
+
+
+        <form onSubmit={handleSubmit}>
           <input type="text" value={search} onChange={handleChange}/>
           <input type="submit" value="&#128269;"/>
         </form>
-        
-        
-        
+
         <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
             {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
         </select>
+
 
         <br></br>
         <br></br>

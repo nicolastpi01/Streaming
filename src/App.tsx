@@ -31,7 +31,6 @@ const App : React.FC = () => {
   if (loading === undefined ) {
     return <p>Cargando.... </p> ;
   }
-  //href="home"  href="profile" 
 
   return (<>
     <Row className="App">

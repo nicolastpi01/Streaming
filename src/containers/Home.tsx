@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback, MutableRefObject } from 'react';
 import ReactPlayer from 'react-player';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
@@ -16,10 +16,11 @@ const Home : React.FC = () => {
     const [offset, setOffset] = useState<number>(1) // cantidad de videos por pagina
     const [size, setSize] = useState<number>(0) // cantidad de videos totales
     const [pages, setPages] = useState<number[]>([]) // todas las paginas, por ejemplo: [0,1,2,3,4,5,6]
-    const [currentPage, setCurrentpage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
+    const [currentPage, setCurrentPage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
     const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
     // FOR PAGINING
 
+    const [query, setQuery] = useState('')
     
 
     useEffect(() => {
@@ -28,7 +29,34 @@ const Home : React.FC = () => {
       
     }, []);
 
-    
+    /*
+
+    useEffect(() => {
+      
+      getAllVideos(currentPage)
+      console.log("HOLA HIJUEPUTA!!")
+      
+    }, [query, currentPage]);
+*/
+
+
+
+  //const [observer, setObserver] = useState<MutableRefObject<any>>(useRef(null));
+
+  /*
+  const lastMediaElementRef = useCallback(node => {
+    //if (loading) return
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && true) { // hasMore
+        setCurrentPage(currentPage => currentPage + 1)
+        searchAllVideos(currentPage)
+      }
+    })
+    if (node) observer.current.observe(node)
+  }, []) */
+
+
     // Llama a la API que busca todos los videos
     const getAllVideos = async(page: number) => {
       searchAllVideos(page).then(result => {
@@ -36,7 +64,7 @@ const Home : React.FC = () => {
         setOffset(result.offset)
         setSize(result.size)
         setPages(calculatePages(Math.ceil(result.size / result.offset)))
-        
+        //setCurrentPage(0) // nuevo
       }).catch((e) => {console.log(); setShow(true)} )
     }
 
@@ -79,6 +107,12 @@ const Home : React.FC = () => {
       return "https://localhost:5001/api/Video/getFileById?fileId="+ id
     }
 
+    /*
+    function handleSearch(e: { target: { value: React.SetStateAction<string>; }; }) {
+      setQuery(e.target.value)
+      setCurrentPage(0)
+    } */
+
 
     return <div>
 
@@ -97,13 +131,33 @@ const Home : React.FC = () => {
         <br></br>
         <br></br>
 
+      {/* 
         <div className="row">
-          
+      */}
+
+      {/* 
+        (
+          <>
+      <input type="text" value={query} onChange={handleSearch}></input>
+      {catalogo.map((video, index) => {
+        if (catalogo.length === index + 1) {
+          return <div ref={lastMediaElementRef} key={video.nombre}>{video.nombre}</div>
+        } else {
+          return <div key={video.nombre}>{video.nombre}</div>
+        }
+      })}
+      
+        </>
+      )
+      */}
+
+
         
-          {
+          { /*
             
             catalogo.length > 0 ? 
-              catalogo.map(video =>
+              catalogo.map( (video, index) =>
+              
                 
                 <div className="col-sm-3">
                                               
@@ -131,12 +185,15 @@ const Home : React.FC = () => {
                       <small className="text-muted">Subido hace 15 minutos</small>
                     </Card.Footer>
                   </Card>   
-              </div>)
+              </div>
+              
+              )
              : <h1>No hay resultados para su busqueda</h1>
               
-          }
+          */ }
           
-          </div>
+         {/*  
+          </div> */}
 
       <br></br>
       <br></br>

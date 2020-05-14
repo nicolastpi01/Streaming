@@ -4,7 +4,13 @@ import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
 import { CardGroup, Card, CardDeck } from 'react-bootstrap';
 
-const Home : React.FC = () => {
+export interface Props {
+  onSubmit: (search: string) => void;
+  onGETSugestions:(log:string)=>void;
+  onGETVideos:(log:string)=>void;
+}
+
+const Home : React.FC<Props> = (props) => {
     
     const [reproductor,setreproductor] = useState<any>()
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
@@ -20,14 +26,7 @@ const Home : React.FC = () => {
     const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
     // FOR PAGINING
 
-    
-
-    useEffect(() => {
-      
-      getAllVideos(0)
-      
-    }, []);
-
+    useEffect(() => {getAllVideos(0)}, []);
     
     // Llama a la API que busca todos los videos
     const getAllVideos = async(page: number) => {
@@ -36,8 +35,8 @@ const Home : React.FC = () => {
         setOffset(result.offset)
         setSize(result.size)
         setPages(calculatePages(Math.ceil(result.size / result.offset)))
-        
-      }).catch((e) => {console.log(); setShow(true)} )
+        props.onGETVideos("ok");
+      }).catch((e) => {props.onGETVideos("bad"); setShow(true)} )
     }
 
     const calculatePages = (cantPaginas: number) => {
@@ -51,18 +50,23 @@ const Home : React.FC = () => {
     // Llama a la API que busca las sugerencias
     const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
       //console.log("Division con barra: " + Math.ceil(size / offset));
-      console.log(pages);
+      //console.log(pages);
       //console.log(event.target.value);
       setSearch(event.target.value);
       getSugestions();
+      
     }
 
     // Llama a la API para obtener las sugerencias
     const getSugestions = async () => {
       searchSugestions(search).then(sugestions =>{
         setSearchSugestion(sugestions)
+        props.onGETSugestions("ok");
         //console.log(sugestions)
-      }).catch(e => console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e))
+      }).catch((e:any) => {
+        //console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
+        props.onGETSugestions(e);
+      });
     }
   
     // Llama a la API que busca los videos
@@ -70,7 +74,8 @@ const Home : React.FC = () => {
       searchVideos(search).then(videos =>{
         setCatalogo(videos)
         //onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
-        console.log(videos)
+        //console.log(videos)
+        props.onSubmit(videos.length);
       }).catch(e => console.log("ERROR BUSCANDO LOS VIDEOS" + e))
       event.preventDefault();
     }
@@ -83,9 +88,9 @@ const Home : React.FC = () => {
     return <div>
 
 
-        <form onSubmit={handleSubmit}>
-          <input type="text" value={search} onChange={handleChange}/>
-          <input type="submit" value="&#128269;"/>
+        <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit">
+          <input type="text" value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
+          <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
         </form>
 
         <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>

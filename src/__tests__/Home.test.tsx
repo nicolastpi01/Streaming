@@ -4,12 +4,20 @@ import { act } from 'react-dom/test-utils';
 import { mocked } from 'ts-jest/utils'
 import Home, {Props} from "../containers/Home";
 import * as mediaAPI from '../APIs/mediaAPI';
+import {VideosResult} from '../types/VideosResult';
 
 //jest.mock('../APIs/mediaAPI');
 const searchSugestionsSpy = jest.spyOn(mediaAPI, 'searchSugestions');
 const searchVideosSpy = jest.spyOn(mediaAPI, 'searchVideos')
 //jest.spyOn(mediaAPI, 'searchSugestions');
 
+const videosResultado : VideosResult = 
+{
+  indice:0,
+  nombre:"",
+  descripcion:"",
+  autor:""
+}
 
 //Mas usadas: mockImplementationOnce, mockResolvedValueOnce, mockRejectedValueOnce
 const promesaTHENDa  = (msj:string) => jest.fn().mockResolvedValueOnce(msj);
@@ -84,6 +92,25 @@ describe("<Home />", () => {
     //await expect(onSubmit).toHaveBeenCalledWith("searchVideos");
     //await expect(searchVideosSpy).toHaveBeenCalled();
     await expect(onSubmit).toHaveBeenCalledWith(0);
+  });
+
+  test("Se buscan videos y devuelve algunos, se notifica la cantidad", async () => {
+    const onSubmit = jest.fn();
+    const {findByTestId} = renderHome({onSubmit});
+    searchVideosSpy.mockResolvedValue([videosResultado,videosResultado,videosResultado]);
+
+    const searchSugestion = await findByTestId("busqueda-recomendaciones-texto");
+    const search = await findByTestId("busqueda-recomendaciones-submit");
+
+    await act( async () => {
+      //TODO poner el handleChange para setear search
+      await fireEvent.change(searchSugestion, { target: { value: "gg" } });
+      await fireEvent.submit(search)
+    });
+    
+    //await expect(onSubmit).toHaveBeenCalledWith("searchVideos");
+    //await expect(searchVideosSpy).toHaveBeenCalled();
+    await expect(onSubmit).toHaveBeenCalledWith(3);
   });
 
   //mensaje es del estilo:<No se han encontrado videos para ese criterio de búsqueda>

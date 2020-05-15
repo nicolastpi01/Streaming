@@ -1,3 +1,4 @@
+export default {};
 /*
 const users = {
     4: {name: 'Mark'},

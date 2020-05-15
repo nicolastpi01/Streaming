@@ -5,7 +5,7 @@ import { Switch, Route, Router} from 'react-router';
 import Profile from "./components/Profile";
 import history from "./utils/history";
 import PrivateRoute from "./components/PrivateRoute";
-import Home from './containers/Home';
+import Home, {Props as HomeProps} from './containers/Home';
 import NewUser from './containers/Register'
 import { BrowserRouter, Link } from 'react-router-dom';
 import { useAuth0 } from "./react-auth0-spa";
@@ -28,6 +28,21 @@ const App : React.FC = () => {
       </Form>
   </>
 
+  function ConfiguredHome(props: Partial<HomeProps> = {}) {
+    const defaultProps: HomeProps = {
+      onSubmit(msj) {
+        console.log(msj);
+      },
+      onGETSugestions(sugerencia) {
+        console.log(sugerencia);
+      },
+      onGETVideos(log) {
+        console.log(log);
+      },
+    };
+    return (<Home {...defaultProps} {...props} />);
+  }
+
   if (loading === undefined ) {
     return <p>Cargando.... </p> ;
   }
@@ -44,7 +59,7 @@ const App : React.FC = () => {
             <NavBarAuth0/>
           </Navbar>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={ConfiguredHome} />
           <Route path="/register" component={Register}/>
           <PrivateRoute path="/profile" component={Profile} />
         </Switch>

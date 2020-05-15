@@ -65,7 +65,7 @@ const Home : React.FC<Props> = (props) => {
         //console.log(sugestions)
       }).catch((e:any) => {
         //console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
-        props.onGETSugestions(e);
+        props.onGETSugestions("bad");
       });
     }
   
@@ -76,7 +76,7 @@ const Home : React.FC<Props> = (props) => {
         //onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
         //console.log(videos)
         props.onSubmit(videos.length);
-      }).catch(e => console.log("ERROR BUSCANDO LOS VIDEOS" + e))
+      }).catch(e => {}/*console.log("ERROR BUSCANDO LOS VIDEOS" + e)*/)
       event.preventDefault();
     }
 

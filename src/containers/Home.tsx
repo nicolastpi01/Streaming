@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
 import { CardGroup, Card, CardDeck } from 'react-bootstrap';
+import Paginacion, { Props as PagProps} from "../components/Paginacion";
 
 export interface Props {
   onSubmit: (search: string) => void;
@@ -25,6 +26,9 @@ const Home : React.FC<Props> = (props) => {
     const [currentPage, setCurrentpage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
     const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
     // FOR PAGINING
+    const [currentCatalogo, setCurrentCatalogo] = useState<VideosResult[]>([]);
+    const [totalRecords, setTotalRecords] = useState<number>(0);
+    //AND ANOTHER ONE
 
     useEffect(() => {getAllVideos(0)}, []);
     
@@ -32,6 +36,7 @@ const Home : React.FC<Props> = (props) => {
     const getAllVideos = async(page: number) => {
       searchAllVideos(page).then(result => {
         setCatalogo(result.page)
+        setTotalRecords(catalogo.length);
         setOffset(result.offset)
         setSize(result.size)
         setPages(calculatePages(Math.ceil(result.size / result.offset)))
@@ -84,6 +89,15 @@ const Home : React.FC<Props> = (props) => {
       return "https://localhost:5001/api/Video/getFileById?fileId="+ id
     }
 
+    const onPageChanged = (nextPage:number,data:PagProps) => {
+      console.log("Cambio Pagina")
+      setCurrentpage(nextPage);
+      setTotalRecords(data.totalRecords)//setState({ , data. });
+      const pageLimit = data.pageLimit;
+      const offset = (currentPage - 1) * pageLimit;
+      setCurrentCatalogo(catalogo.slice(offset, offset + pageLimit))
+      return currentPage;
+    };
 
     return <div>
 
@@ -101,6 +115,12 @@ const Home : React.FC<Props> = (props) => {
         <br></br>
         <br></br>
         <br></br>
+        <Paginacion 
+          pageLimit={2}
+          pageNeighbours={1}
+          totalRecords={catalogo.length}       
+          onPageChanged={onPageChanged}
+        />
 
         <div className="row">
           
@@ -108,12 +128,14 @@ const Home : React.FC<Props> = (props) => {
           {
             
             catalogo.length > 0 ? 
-              catalogo.map(video =>
+              currentCatalogo.map(video =>
                 
                 <div className="col-sm-3">
                                               
                     <Card style={{ height: '25rem' }}>
-                    
+                    <Card.Header>
+                      
+                    </Card.Header>
                     <Card.Body>
                       <Card.Title>{video.nombre}</Card.Title>
                       

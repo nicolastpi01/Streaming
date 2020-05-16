@@ -6,10 +6,9 @@ import Home, {Props} from "../containers/Home";
 import * as mediaAPI from '../APIs/mediaAPI';
 import {VideosResult} from '../types/VideosResult';
 
-//jest.mock('../APIs/mediaAPI');
+//jest.mock('../APIs/mediaAPI'); --> sirve para mockear solo esto, para unit test
 const searchSugestionsSpy = jest.spyOn(mediaAPI, 'searchSugestions');
 const searchVideosSpy = jest.spyOn(mediaAPI, 'searchVideos')
-//jest.spyOn(mediaAPI, 'searchSugestions');
 
 const videosResultado : VideosResult = 
 {

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import {Navbar, Nav, NavDropdown, Form, Col, Button, Row, Container} from 'react-bootstrap';
+import React, { useState, useEffect} from 'react';
+import {Navbar, Nav, NavDropdown, Form, Col, Button, Row, Container,Alert} from 'react-bootstrap';
 import './App.css';
 import { Switch, Route, Router} from 'react-router';
 import Profile from "./components/Profile";
@@ -15,6 +15,7 @@ import Register from './containers/Register';
 const App : React.FC = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const [expand, setExpand] = React.useState<boolean>(false);
+  const [estadoAlerta, setEstadoAlerta] = React.useState<string>("Ok");
   const { loading } = useAuth0();
   
   const NavBarAuth0 = () => <>
@@ -31,21 +32,64 @@ const App : React.FC = () => {
   function ConfiguredHome(props: Partial<HomeProps> = {}) {
     const defaultProps: HomeProps = {
       onSubmit(msj) {
-        console.log(msj);
+        /*
+        if(msj!="0"){
+          setEstadoAlerta("Ok");
+        }
+        else{
+          setEstadoAlerta("Bad");
+        }
+        setExpand(true);*/
+        //console.log(msj);
       },
       onGETSugestions(sugerencia) {
-        console.log(sugerencia);
+        /*if(sugerencia=="ok"){
+          setEstadoAlerta("Ok");
+        }
+        else{
+          setEstadoAlerta("Bad");
+        }
+        setExpand(true);*/
+        //console.log(sugerencia);
       },
       onGETVideos(log) {
-        console.log(log);
+        /*if(log=="ok"){
+          setEstadoAlerta("Ok");
+        }
+        else{
+          setEstadoAlerta("Bad");
+        }
+        setExpand(true);*/
+        //console.log(log);
       },
     };
     return (<Home {...defaultProps} {...props} />);
   }
-
+/*
+  useEffect(() => {
+    let interval:any= null;
+    if (expand) {
+      interval = setInterval(() => {
+        setExpand(false);
+        clearInterval(interval)
+      }, 1000);
+    } //else clearInterval(interval);
+    //return () => clearInterval(interval);
+  }, [expand]);
+*/
   if (loading === undefined ) {
     return <p>Cargando.... </p> ;
   }
+
+  const AlertOk = () => (
+  <Alert  variant={'success'}>
+    Todo Ok
+  </Alert>);
+
+  const AlertBad = () => (
+  <Alert  variant={'danger'}>
+    Algo salio mal ;(
+  </Alert>);
 
   return (<>
     <Row className="App">
@@ -63,7 +107,9 @@ const App : React.FC = () => {
           <Route path="/register" component={Register}/>
           <PrivateRoute path="/profile" component={Profile} />
         </Switch>
-
+        {!expand? <></>: (estadoAlerta=="ok"?
+          AlertOk() : AlertBad() 
+        )}
       </Container>
       </Router>
     </Row>

@@ -5,16 +5,18 @@ import { useAuth0 } from "../react-auth0-spa";
 import { Button } from "react-bootstrap";
 import axios from "axios";
 import logo from "../logo.svg";
-
+import { register } from "../APIs/authAPI";
 
 const Profile = () => {
   const { loading, user } = useAuth0();
   console.log(user)
 
-  const register = () => 
-    axios.get("https://localhost:5001/api/Auth/register?nombre="+user.name //,
+  const registrar = () => 
+    register("aa","bb","cc")
+    //axios.get("https://localhost:5001/api/Auth/register?nombre="+user.name //,
     //JSON.stringify({nombre:user.name}) //, pass:"user.email" 
-    ).then(console.log)
+      .then(console.log)
+
   if (loading || !user) {
     return <div>Loading...</div>;
   }
@@ -22,7 +24,7 @@ const Profile = () => {
   return (
     <Fragment>
       <img width={64} height={64} src={logo} alt="Profile" />
-      <Button onClick={ register }>
+      <Button onClick={ registrar }>
           Mandar
       </Button>
       <h2>{user.name}</h2>

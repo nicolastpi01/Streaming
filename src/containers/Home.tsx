@@ -35,7 +35,8 @@ const Home : React.FC<Props> = (props) => {
     // Llama a la API que busca todos los videos
     const getAllVideos = async(page: number) => {
       searchAllVideos(page).then(result => {
-        setCatalogo(result.page)
+        setCatalogo(result.page);
+        setCurrentCatalogo(catalogo.slice(2));
         setTotalRecords(catalogo.length);
         setOffset(result.offset)
         setSize(result.size)
@@ -98,44 +99,54 @@ const Home : React.FC<Props> = (props) => {
       setCurrentCatalogo(catalogo.slice(offset, offset + pageLimit))
       return currentPage;
     };
+    const headerClass = [
+      "text-dark py-2 pr-4 m-0",
+      currentPage ? "border-gray border-right" : ""
+    ].join(" ").trim();
 
-    return <div>
+    return <>
+      <div className="container mb-5">
+      <div className="row d-flex flex-row py-5">
 
+      <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
+        <div className="d-flex flex-row align-items-center">
+          <h2 className={headerClass}>
+                <strong className="text-secondary">{catalogo.length}</strong>{" "}
+                Catalogos
+          </h2>
+          <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit">
+            <input type="text" value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
+            <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
+          </form>
 
-        <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit">
-          <input type="text" value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
-          <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
-        </form>
-
-        <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
-            {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
-        </select>
-
-
+          <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
+              {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
+          </select>
+        </div>
+        {/*
         <br></br>
         <br></br>
         <br></br>
-        <Paginacion 
-          pageLimit={2}
-          pageNeighbours={1}
-          totalRecords={catalogo.length}       
-          onPageChanged={onPageChanged}
-        />
+        */}
+        <div className="d-flex flex-row py-4 align-items-center">
+          <Paginacion
+            pageLimit={2}
+            pageNeighbours={1}
+            totalRecords={catalogo.length}       
+            onPageChanged={onPageChanged}
+          />
+          </div>
+      </div>
+
 
         <div className="row">
-          
-        
           {
-            
-            catalogo.length > 0 ? 
+            catalogo.length > 0 ? //Si hay videos, se muestran los filtrados
               currentCatalogo.map(video =>
                 
                 <div className="col-sm-3">
                                               
                     <Card style={{ height: '25rem' }}>
-                    <Card.Header>
-                      
-                    </Card.Header>
                     <Card.Body>
                       <Card.Title>{video.nombre}</Card.Title>
                       
@@ -164,11 +175,12 @@ const Home : React.FC<Props> = (props) => {
           }
           
           </div>
-
       <br></br>
       <br></br>
       <br></br>
       </div>
+      </div>
+    </>
 }
 
 export default Home

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {Nav, Form, Col, Button, Row, Container} from 'react-bootstrap';
 import {Pagination} from 'react-bootstrap';
 
 const LEFT_PAGE = 'LEFT';
@@ -28,7 +29,7 @@ export interface Props {
 }
 
 const Paginacion : React.FC<Props> = (props:Props) => {
-    const [items,setItems] = useState([]);
+    //const [items,setItems] = useState([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalRecords, setTotalRecords] = useState<number>(0);
     const { pageLimit = 30} = props;
@@ -36,22 +37,17 @@ const Paginacion : React.FC<Props> = (props:Props) => {
 
     const totalPages = Math.ceil(totalRecords / pageLimit);
 
-    /*
-    
-    console.log("currentPage" + currentPage)
-    console.log("totalPages" + totalPages)*/
 
     useEffect(() => {
       //setCurrentPage(props.)
       setTotalRecords(props.totalRecords)
       console.log("totalRecords" + totalRecords)
-    }, [props]);
+    }, [props.totalRecords]);
 
     //let cantidad = React.Children.count(props.children)
     //console.log(props.children)
     const gotoPage = (page:number) => {
-        const { onPageChanged = (i:number) => i } = props;
-    
+        //const { onPageChanged = (i:number) => i } = props;
         const currentPage = Math.max(0, Math.min(page, totalPages));
     /*
         const paginationData:{nextPage:number,data:Props}= {
@@ -63,21 +59,21 @@ const Paginacion : React.FC<Props> = (props:Props) => {
           }
         };*/
     
-        setCurrentPage(onPageChanged(currentPage,props));
+        setCurrentPage(props.onPageChanged(currentPage,props));
       };
     
     const handleClick = (page:number, event: React.MouseEvent<HTMLElement>) => {
-        //event.preventDefault();
+        event.preventDefault();
         gotoPage(page);
     };
     
     const handleMoveLeft = (event: React.MouseEvent<HTMLElement>) => {
-        //event.preventDefault();
+        event.preventDefault();
         gotoPage(currentPage - pageNeighbours * 2 - 1);
     };
     
     const handleMoveRight = (event: React.MouseEvent<HTMLElement>) => {
-        //event.preventDefault();
+        event.preventDefault();
         gotoPage(currentPage + pageNeighbours * 2 + 1);
     };
 
@@ -133,7 +129,7 @@ const Paginacion : React.FC<Props> = (props:Props) => {
       }
     
       const pages = fetchPageNumbers();
-      console.log("renderizando Paginacion")
+      //console.log("renderizando Paginacion")
       
       return (
           <nav aria-label="Countries Pagination">
@@ -188,13 +184,25 @@ const Paginacion : React.FC<Props> = (props:Props) => {
               })}
             </ul>
           </nav>
-    );
-/*
+      );
+
+}
+/* Mejorado con Pagination, pero necesita 2 clicks para andar!
+
     return <>
-        <Pagination>
-            <Pagination.Item>{1}</Pagination.Item>
-            {
-                /*props.children?.forEach( element => {
+        <Pagination size="lg">
+          {pages.map((page:any, index:number) => {
+            if (page === LEFT_PAGE)
+              return <Pagination.First onClick={handleMoveLeft}>Previous</Pagination.First>;
+            if (page === RIGHT_PAGE)
+              return <Pagination.Next onClick={handleMoveRight}>Next</Pagination.Next>; 
+            return <Pagination.Item onClick={(e:React.MouseEvent<HTMLElement>)=>handleClick(page,e)}>{page}</Pagination.Item>
+            })}
+        </Pagination>
+    </>
+    
+    {
+                props.children?.forEach( element => {
                     <Pagination.Item>{element}</Pagination.Item>
                 })
                 Probar con React.Children.map(children, function[(thisArg)])
@@ -203,10 +211,6 @@ const Paginacion : React.FC<Props> = (props:Props) => {
                 Otro util puede ser React.Children.only(children)
                 Verifies that children has only one child (a React element) and returns it. Otherwise this method throws an error.
                 
-
-            }
-        </Pagination>
-    </>*/
-}
+            } */
 
 export default Paginacion;

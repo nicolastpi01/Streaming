@@ -28,7 +28,9 @@
     "start": "react-scripts start",
     "startsecure": "set HTTPS=true&&react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "testr": "react-scripts test",
+    "testj": "jest",
+    "testj:watch": "jest --watch",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -48,5 +50,11 @@
   },
   "devDependencies": {
     "@types/react": "^16.9.34"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "src/__mocks__/styleMock.ts",
+      "\\.(gif|ttf|eot|svg)$": "src/__mocks__/fileMock.ts"
+    }
   }
 }

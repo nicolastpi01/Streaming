@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { VideosResult } from '../types/VideosResult';
-import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
+import { searchSugestions, searchVideos, searchAllVideos, searchImagen} from '../APIs/mediaAPI';
 import { CardGroup, Card, CardDeck } from 'react-bootstrap';
 import Paginacion, { Props as PagProps} from "../components/Paginacion";
 
@@ -35,6 +35,9 @@ const Home : React.FC<Props> = (props) => {
     // Llama a la API que busca todos los videos
     const getAllVideos = async(page: number) => {
       searchAllVideos(page).then(result => {
+        result.page.forEach( (videores :VideosResult) => 
+          videores.imagenURL = searchImagen(videores.indice.toString())
+        );
         setCatalogo(result.page);
         setCurrentCatalogo(catalogo.slice(2));
         setTotalRecords(catalogo.length);
@@ -84,10 +87,6 @@ const Home : React.FC<Props> = (props) => {
         props.onSubmit(videos.length);
       }).catch(e => {}/*console.log("ERROR BUSCANDO LOS VIDEOS" + e)*/)
       event.preventDefault();
-    }
-
-    function sourceurl(id: string){
-      return "https://localhost:5001/api/Video/getFileById?fileId="+ id
     }
 
     const onPageChanged = (nextPage:number,data:PagProps) => {
@@ -147,18 +146,9 @@ const Home : React.FC<Props> = (props) => {
                 <div className="col-sm-3">
                                               
                     <Card style={{ height: '25rem' }}>
+                    <Card.Img variant="bottom" src={video.imagenURL} />
                     <Card.Body>
                       <Card.Title>{video.nombre}</Card.Title>
-                      
-                      <ReactPlayer style={{ }}
-                        ref={(player:any) => setreproductor(player) }
-                        width={"small"}
-                        height={"small"}
-                        url={sourceurl(video.indice.toString())}
-                        controls={true}
-                        fluid={true}
-                      >
-                      </ReactPlayer>    
                       <Card.Text>
                         {video.descripcion.slice(0,20)}
                       </Card.Text>
@@ -182,5 +172,17 @@ const Home : React.FC<Props> = (props) => {
       </div>
     </>
 }
+
+/*
+                      <ReactPlayer style={{ }}
+                        ref={(player:any) => setreproductor(player) }
+                        width={"small"}
+                        height={"small"}
+                        url={sourceurl(video.indice.toString())}
+                        controls={true}
+                        fluid={true}
+                      >
+                      </ReactPlayer>
+*/
 
 export default Home

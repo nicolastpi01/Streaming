@@ -53,3 +53,5 @@ export const searchVideo = async (id: string) : Promise<string> =>  {
     return response.json()
 }
 
+export const searchImagen = (id: string) =>
+    getServerAndPort + "/getImagenById?fileId=" + id;

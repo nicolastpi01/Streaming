@@ -22,8 +22,8 @@ ReactDOM.render(
   <React.StrictMode>
   <Auth0Provider
     domain={config.domain}
-    client_id={config.clientId}
-    redirect_uri={window.location.origin}
+    client_id={config.clientID}
+    redirect_uri={config.redirectUri}
     onRedirectCallback={onRedirectCallback}
   >
     <App />

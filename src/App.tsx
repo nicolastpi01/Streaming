@@ -11,6 +11,7 @@ import { BrowserRouter, Link } from 'react-router-dom';
 import { useAuth0 } from "./react-auth0-spa";
 import { object } from 'prop-types';
 import Register from './containers/Register';
+import Reproductor from './containers/Reproductor';
 
 const App : React.FC = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -104,6 +105,7 @@ const App : React.FC = () => {
           </Navbar>
         <Switch>
           <Route exact path="/" component={ConfiguredHome} />
+          <Route path="/video" component={Reproductor}/>
           <Route path="/register" component={Register}/>
           <PrivateRoute path="/profile" component={Profile} />
         </Switch>

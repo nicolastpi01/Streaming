@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { VideosResult } from '../types/VideosResult';
-import { searchSugestions, searchVideos, searchAllVideos, searchImagen} from '../APIs/mediaAPI';
+import { searchSugestions, searchVideos, searchAllVideos, getImagen} from '../APIs/mediaAPI';
 import { CardGroup, Card, CardDeck } from 'react-bootstrap';
 import Paginacion, { Props as PagProps} from "../components/Paginacion";
+import Reproductor, { Props as RepProps} from "./Reproductor";
+import history from "../utils/history";
 
 export interface Props {
   onSubmit: (search: string) => void;
@@ -12,8 +14,6 @@ export interface Props {
 }
 
 const Home : React.FC<Props> = (props) => {
-    
-    const [reproductor,setreproductor] = useState<any>()
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
@@ -36,7 +36,7 @@ const Home : React.FC<Props> = (props) => {
     const getAllVideos = async(page: number) => {
       searchAllVideos(page).then(result => {
         result.page.forEach( (videores :VideosResult) => 
-          videores.imagenURL = searchImagen(videores.indice.toString())
+          videores.imagenURL = getImagen(videores.indice.toString())
         );
         setCatalogo(result.page);
         setCurrentCatalogo(catalogo.slice(2));
@@ -65,6 +65,12 @@ const Home : React.FC<Props> = (props) => {
       getSugestions();
       
     }
+
+    const verVideo = (video:VideosResult) => history.push({
+      pathname: '/video',
+      //search: '?query=abc',
+      state: video
+    });
 
     // Llama a la API para obtener las sugerencias
     const getSugestions = async () => {
@@ -145,7 +151,7 @@ const Home : React.FC<Props> = (props) => {
                 
                 <div className="col-sm-3">
                                               
-                    <Card style={{ height: '25rem' }}>
+                    <Card style={{ height: '25rem' }} onClick={()=>verVideo(video)}>
                     <Card.Img variant="bottom" src={video.imagenURL} />
                     <Card.Body>
                       <Card.Title>{video.nombre}</Card.Title>
@@ -172,17 +178,5 @@ const Home : React.FC<Props> = (props) => {
       </div>
     </>
 }
-
-/*
-                      <ReactPlayer style={{ }}
-                        ref={(player:any) => setreproductor(player) }
-                        width={"small"}
-                        height={"small"}
-                        url={sourceurl(video.indice.toString())}
-                        controls={true}
-                        fluid={true}
-                      >
-                      </ReactPlayer>
-*/
 
 export default Home

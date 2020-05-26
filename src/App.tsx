@@ -12,6 +12,7 @@ import { useAuth0 } from "./react-auth0-spa";
 import { object } from 'prop-types';
 import Register from './containers/Register';
 import Reproductor from './containers/Reproductor';
+import ViewUser from './containers/ViewUser';
 
 const App : React.FC = () => {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -101,12 +102,14 @@ const App : React.FC = () => {
             {isAuthenticated && (
               <Navbar.Brand className="sm" onClick={()=>history.push("profile")}>Profile</Navbar.Brand>
             )}
+            <Navbar.Brand className="sm" onClick={()=>history.push("media")} >YourMedia</Navbar.Brand>
             <NavBarAuth0/>
           </Navbar>
         <Switch>
           <Route exact path="/" component={ConfiguredHome} />
           <Route path="/video" component={Reproductor}/>
           <Route path="/register" component={Register}/>
+          <Route path="/media" component={ViewUser}/>
           <PrivateRoute path="/profile" component={Profile} />
         </Switch>
         {!expand? <></>: (estadoAlerta=="ok"?

@@ -41,6 +41,16 @@ export const searchAllVideos = async (page: number) =>  {
     return response.json()
 }
 
+export const sendVideo = async (media:FormData, nombre:string) : Promise<string> =>  {
+    const mediaByIdAPI = getServerAndPort + "/saveFile?name=" + nombre;
+
+    const response = await fetch(mediaByIdAPI, {
+        method: 'POST',
+        body:media
+    })
+    return response.json()
+}
+
 export const searchVideo = async (id: string) : Promise<string> =>  {
     const mediaByIdAPI = getServerAndPort + "/getFileById?fileId=" + id
 

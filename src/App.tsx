@@ -103,7 +103,8 @@ const App : React.FC = () => {
             <NavBarAuth0/>
           </Navbar>
         <Switch>
-          <Route exact path="/startSession" component={ConfiguredHome} />
+          {/*<Route exact path="/startSession" component={ConfiguredHome} /> */}
+          <Route exact path="/startSession" component={Home} />
           <Route path="/register" component={Register}/>
           <PrivateRoute path="/profile" component={Profile} />
         </Switch>

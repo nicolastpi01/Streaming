@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import {Navbar, Nav, NavDropdown, Form, Col, Button, Row, Container,Alert} from 'react-bootstrap';
+import {Navbar, Nav, NavDropdown, Form, Col, Button, Row, Container,Alert, FormControl} from 'react-bootstrap';
 import './App.css';
 import { Switch, Route, Router} from 'react-router';
 import Profile from "./components/Profile";
@@ -22,10 +22,20 @@ const App : React.FC = () => {
       <Form inline>
   
         {!isAuthenticated && (
-          <Button variant="outline-light" onClick={() => loginWithRedirect({})}>Log in</Button>
+          <Button variant="outline-light" onClick={() =>
+             
+            loginWithRedirect({})}>Log in</Button>
         )}
   
-        {isAuthenticated && <Button variant="outline-light" onClick={() => logout()}>Log out</Button>}
+        {isAuthenticated && 
+        <Button variant="outline-light" onClick={() => logout()}>Log out</Button> }
+
+
+
+        {!isAuthenticated && 
+         <Link to="/profile"><Button variant="outline-light">Perfil</Button></Link>
+         } 
+         
       </Form>
   </>
 
@@ -95,20 +105,80 @@ const App : React.FC = () => {
     <Row className="App">
       <Router history={history}>
         <Container className="flex flex-grow-4" fluid>
+          {/* 
           <Navbar bg="dark" variant="light" >
+         
+          
+          <Navbar.Brand href="/register"> {/* Deberia ir al Home */}
+          {/*
+              <img
+                src="iconW.ico"
+                width="40"
+                height="40"
+                className="d-inline-block align-top"
+                alt="Media logo"
+              />
+            </Navbar.Brand>
+            <p style={{color : "white", marginTop : "1%" }}>Streaming</p>
+
             <Navbar.Brand className="sm" onClick={()=>history.push("home")} >Home</Navbar.Brand>
             {isAuthenticated && (
               <Navbar.Brand className="sm" onClick={()=>history.push("profile")}>Profile</Navbar.Brand>
             )}
+            
             <NavBarAuth0/>
+            
           </Navbar>
+          */}
+
+
+<Navbar bg="dark" variant="light">
+  {/* 
+    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
+  */}
+    
+    <Nav className="mx-auto"> // mr-auto aling left
+    <Form inline>
+    <Nav.Link href="/profile"><img
+                src="iconW.ico"
+                width="40"
+                height="40"
+                className="d-inline-block align-top"
+                alt="Media logo"
+              /></Nav.Link>
+      <Nav.Link href="/profile"><p style={{color : "white", marginTop : "16px"}}>Streaming</p></Nav.Link>
+      </Form>
+    </Nav>
+    
+
+    <Form inline>
+    
+      {!isAuthenticated && (
+          <Button variant="outline-light" onClick={() =>
+             loginWithRedirect({})}>Log in</Button>
+      )}
+
+      {isAuthenticated && (
+          <Nav.Link href="/Home"><Button variant="outline-light" onClick={() =>
+             loginWithRedirect({})}>Home</Button></Nav.Link>
+      )}
+
+      {isAuthenticated && (
+          <Button variant="outline-light" onClick={() =>
+              logout()}>Log Out</Button>
+      )}
+      
+    </Form>
+  </Navbar>
+
+
         <Switch>
-          {/*<Route exact path="/startSession" component={ConfiguredHome} /> */}
-          <Route exact path="/startSession" component={Home} />
+          <Route exact path="/startSession" component={ConfiguredHome} />
           <Route path="/register" component={Register}/>
           <PrivateRoute path="/profile" component={Profile} />
+          <PrivateRoute path="/Home" component={Home} />
         </Switch>
-        {!expand? <></>: (estadoAlerta=="ok"?
+        {!expand? <></>: (estadoAlerta==="ok"?
           AlertOk() : AlertBad() 
         )}
       </Container>

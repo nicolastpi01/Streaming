@@ -15,8 +15,6 @@
     "axios": "^0.19.2",
     "bootstrap": "4.4.1",
     "core-js": "^2.6.5",
-    "jest":"26.0.1",
-    "ts-jest":"25.5.1",
     "react": "^16.13.1",
     "react-bootstrap": "1.0.0",
     "react-dom": "^16.13.1",
@@ -53,10 +51,10 @@
   "devDependencies": {
     "@types/react": "^16.9.34"
   },
-  "jest":{
-    "moduleNameMapper":{
-         "\\.(css|less|sass|scss)$": "src/__mocks__/styleMock.ts",
-         "\\.(gif|ttf|eot|svg)$": "src/__mocks__/fileMock.ts"
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "src/__mocks__/styleMock.ts",
+      "\\.(gif|ttf|eot|svg)$": "src/__mocks__/fileMock.ts"
     }
   }
 }

@@ -14,6 +14,7 @@ export const Auth0Provider = ({
 }) => {
   const [isAuthenticated, setIsAuthenticated] = useState();
   const [user, setUser] = useState();
+  //const [token, setToken] = useState();
   const [auth0Client, setAuth0] = useState();
   const [loading, setLoading] = useState(true);
   const [popupOpen, setPopupOpen] = useState(false);
@@ -35,6 +36,7 @@ export const Auth0Provider = ({
 
       if (isAuthenticated) {
         const user = await auth0FromHook.getUser();
+        
         setUser(user);
       }
 
@@ -54,7 +56,9 @@ export const Auth0Provider = ({
       setPopupOpen(false);
     }
     const user = await auth0Client.getUser();
+    //const token = await auth0Client.getIdTokenClaims();
     setUser(user);
+    //setToken(token);
     setIsAuthenticated(true);
   };
 
@@ -62,9 +66,11 @@ export const Auth0Provider = ({
     setLoading(true);
     await auth0Client.handleRedirectCallback();
     const user = await auth0Client.getUser();
+    //const token = await auth0Client.getIdTokenClaims();
     setLoading(false);
     setIsAuthenticated(true);
     setUser(user);
+    //setToken(token);
   };
   return (
     <Auth0Context.Provider

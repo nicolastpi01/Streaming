@@ -7,6 +7,8 @@ import { Auth0Provider } from "./react-auth0-spa";
 import config from "./auth_config.json";
 import history from "./utils/history";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 // A function that routes the user to the right place
 // after login
 const onRedirectCallback = appState  => {
@@ -17,13 +19,21 @@ const onRedirectCallback = appState  => {
   );
 };
 
+/*
+domain={config.domain}
+    client_id={config.clientId}
+    redirect_uri={window.location.origin}
+    audience={config.audience}     // NEW - specify the audience value
+    onRedirectCallback={onRedirectCallback}
+    */
 
 ReactDOM.render(
   <React.StrictMode>
   <Auth0Provider
     domain={config.domain}
-    client_id={config.clientId}
-    redirect_uri={window.location.origin}
+    client_id={config.clientID}
+    redirect_uri={config.redirectUri}
+    audience={config.audience}  // NEW - specify the audience value
     onRedirectCallback={onRedirectCallback}
   >
     <App />

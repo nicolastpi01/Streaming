@@ -24,18 +24,20 @@ export const searchVideos = async (search: string) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
+            
         }
     })
     return response.json()
 }
 
-export const searchAllVideos = async (page: number) =>  {
+export const searchAllVideos = async (page: number, token: string) =>  {
     const allAPI = getServerAndPort + "/videos"
 
     const response = await fetch(allAPI, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         }
     })
     return response.json()

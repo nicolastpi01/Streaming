@@ -11,12 +11,13 @@ import { BrowserRouter, Link } from 'react-router-dom';
 import { useAuth0 } from "./react-auth0-spa";
 import { object } from 'prop-types';
 import Register from './containers/Register';
+import NavBar from './containers/Navbar';
 
 const App : React.FC = () => {
-  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout, user, loading, auth0Client } = useAuth0();
   const [expand, setExpand] = React.useState<boolean>(false);
   const [estadoAlerta, setEstadoAlerta] = React.useState<string>("Ok");
-  const { loading } = useAuth0();
+  
   
   const NavBarAuth0 = () => <>
       <Form inline>
@@ -73,20 +74,9 @@ const App : React.FC = () => {
         //console.log(log);
       },
     };
-    return (<Home {...defaultProps} {...props} />);
+    //return (<Home {...defaultProps} {...props} />);
   }
-/*
-  useEffect(() => {
-    let interval:any= null;
-    if (expand) {
-      interval = setInterval(() => {
-        setExpand(false);
-        clearInterval(interval)
-      }, 1000);
-    } //else clearInterval(interval);
-    //return () => clearInterval(interval);
-  }, [expand]);
-*/
+
   if (loading === undefined ) {
     return <p>Cargando.... </p> ;
   }
@@ -101,90 +91,36 @@ const App : React.FC = () => {
     Algo salio mal ;(
   </Alert>);
 
-  return (<>
-    <Row className="App">
+  return (
+    <div className="App">
       <Router history={history}>
-        <Container className="flex flex-grow-4" fluid>
-          {/* 
-          <Navbar bg="dark" variant="light" >
-         
-          
-          <Navbar.Brand href="/register"> {/* Deberia ir al Home */}
-          {/*
-              <img
-                src="iconW.ico"
-                width="40"
-                height="40"
-                className="d-inline-block align-top"
-                alt="Media logo"
-              />
-            </Navbar.Brand>
-            <p style={{color : "white", marginTop : "1%" }}>Streaming</p>
-
-            <Navbar.Brand className="sm" onClick={()=>history.push("home")} >Home</Navbar.Brand>
-            {isAuthenticated && (
-              <Navbar.Brand className="sm" onClick={()=>history.push("profile")}>Profile</Navbar.Brand>
-            )}
-            
-            <NavBarAuth0/>
-            
-          </Navbar>
-          */}
-
-
-<Navbar bg="dark" variant="light">
-  {/* 
-    <Navbar.Brand href="#home">Navbar</Navbar.Brand>
-  */}
-    
-    <Nav className="mx-auto"> // mr-auto aling left
-    <Form inline>
-    <Nav.Link href="/profile"><img
-                src="iconW.ico"
-                width="40"
-                height="40"
-                className="d-inline-block align-top"
-                alt="Media logo"
-              /></Nav.Link>
-      <Nav.Link href="/profile"><p style={{color : "white", marginTop : "16px"}}>Streaming</p></Nav.Link>
-      </Form>
-    </Nav>
-    
-
-    <Form inline>
-    
-      {!isAuthenticated && (
-          <Button variant="outline-light" onClick={() =>
-             loginWithRedirect({})}>Log in</Button>
-      )}
-
-      {isAuthenticated && (
-          <Nav.Link href="/Home"><Button variant="outline-light" onClick={() =>
-             loginWithRedirect({})}>Home</Button></Nav.Link>
-      )}
-
-      {isAuthenticated && (
-          <Button variant="outline-light" onClick={() =>
-              logout()}>Log Out</Button>
-      )}
-      
-    </Form>
-  </Navbar>
-
-
+        <header>
+          <NavBar/>
+        </header>
+        
         <Switch>
-          <Route exact path="/startSession" component={ConfiguredHome} />
-          <Route path="/register" component={Register}/>
-          <PrivateRoute path="/profile" component={Profile} />
-          <PrivateRoute path="/Home" component={Home} />
+          <Route path="/" exact/>
+          <Route path="/profile" component={Register} />
         </Switch>
-        {!expand? <></>: (estadoAlerta==="ok"?
-          AlertOk() : AlertBad() 
-        )}
-      </Container>
       </Router>
-    </Row>
-    </>);
+      <body>
+        <Home/>
+      </body>
+    </div>
+
+    /*
+     <Switch>
+        <Route path="/" exact />
+        <Route exact path="/startSession" component={ConfiguredHome} />
+        <Route path="/register" component={Register}/>
+        <PrivateRoute path="/profile" component={Profile} />
+        <PrivateRoute path="/Home" component={Home} />
+      </Switch>
+    */
+  );
+
 }
 
 export default App;
+
+

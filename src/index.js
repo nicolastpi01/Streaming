@@ -19,24 +19,16 @@ const onRedirectCallback = appState  => {
   );
 };
 
-/*
-domain={config.domain}
-    client_id={config.clientId}
-    redirect_uri={window.location.origin}
-    audience={config.audience}     // NEW - specify the audience value
-    onRedirectCallback={onRedirectCallback}
-    */
-
 ReactDOM.render(
   <React.StrictMode>
   <Auth0Provider
     domain={config.domain}
     client_id={config.clientID}
-    redirect_uri={config.redirectUri}
+    redirect_uri={window.location.origin}
     audience={config.audience}  // NEW - specify the audience value
     onRedirectCallback={onRedirectCallback}
   >
-    <App />
+    <App/>
   </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -4,6 +4,7 @@ import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
 import { CardGroup, Card, CardDeck } from 'react-bootstrap';
 import Paginacion, { Props as PagProps} from "../components/Paginacion";
+import { useAuth0 } from '../react-auth0-spa';
 
 export interface Props {
   onSubmit: (search: string) => void;
@@ -11,13 +12,14 @@ export interface Props {
   onGETVideos:(log:string)=>void;
 }
 
-const Home : React.FC<Props> = (props) => {
+const Home : React.FC = () => {
     
     const [reproductor,setreproductor] = useState<any>()
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
     const [show, setShow] = useState(false);
+    const { getTokenSilently } = useAuth0();
 
     // FOR PAGINING
     const [offset, setOffset] = useState<number>(1) // cantidad de videos por pagina
@@ -34,16 +36,25 @@ const Home : React.FC<Props> = (props) => {
     
     // Llama a la API que busca todos los videos
     const getAllVideos = async(page: number) => {
-      searchAllVideos(page).then(result => {
-        setCatalogo(result.page);
-        setCurrentCatalogo(catalogo.slice(2));
-        setTotalRecords(catalogo.length);
-        setOffset(result.offset)
-        setSize(result.size)
-        setPages(calculatePages(Math.ceil(result.size / result.offset)))
-        props.onGETVideos("ok");
-      }).catch((e) => {props.onGETVideos("bad"); setShow(true)} )
-    }
+      try {
+          const token = await getTokenSilently();
+          searchAllVideos(page, token).then(result => {
+          setCatalogo(result.page);
+          setCurrentCatalogo(catalogo.slice(2));
+          setTotalRecords(catalogo.length);
+          setOffset(result.offset)
+          setSize(result.size)
+          setPages(calculatePages(Math.ceil(result.size / result.offset)))
+        
+          }).catch((e) => {} )
+        }
+        catch (error) {
+          console.log(error);
+        }
+      } 
+    
+       
+     
 
     const calculatePages = (cantPaginas: number) => {
           var paginas :number[] = [];
@@ -67,11 +78,11 @@ const Home : React.FC<Props> = (props) => {
     const getSugestions = async () => {
       searchSugestions(search).then(sugestions =>{
         setSearchSugestion(sugestions)
-        props.onGETSugestions("ok");
+        //props.onGETSugestions("ok");
         //console.log(sugestions)
       }).catch((e:any) => {
         //console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
-        props.onGETSugestions("bad");
+        //props.onGETSugestions("bad");
       });
     }
   
@@ -81,7 +92,7 @@ const Home : React.FC<Props> = (props) => {
         setCatalogo(videos)
         //onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
         //console.log(videos)
-        props.onSubmit(videos.length);
+        //props.onSubmit(videos.length);
       }).catch(e => {}/*console.log("ERROR BUSCANDO LOS VIDEOS" + e)*/)
       event.preventDefault();
     }

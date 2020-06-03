@@ -8,7 +8,7 @@ import Paginacion, { Props as PagProps} from "../components/Paginacion";
 
 
 const ViewUser : React.FC = (props) => {
-    const [archivo, setArchivo] = useState<any[]>([]);
+    //const [archivo, setArchivo] = useState<any[]>([]);
     const selectedFiles = createRef<HTMLInputElement>();
     const [nombre, setNombre] = useState<string|undefined>();
 
@@ -19,13 +19,21 @@ const ViewUser : React.FC = (props) => {
                 :
                 "no hay current")
             :"sin definir selectedFiles")
+
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>)=>{
+        if( nombre === undefined ) return;
+        if( selectedFiles === undefined || 
+            selectedFiles.current === undefined ||
+            selectedFiles.current == null ||
+            selectedFiles.current.files == null ||
+            selectedFiles.current.files.length == 0 )
+            return;
+
         const data = new FormData()
-        
-        data.append('video', archivo[0]);
-        data.append('nombre', "hola");
+        data.append('video', selectedFiles.current.files[0]);
+        data.append('nombre', nombre);
         let res = sendVideo(data);
         console.log(selectedFiles.current);
         event.preventDefault();
@@ -35,7 +43,7 @@ const ViewUser : React.FC = (props) => {
     <form onSubmit={handleSubmit}>
             <label>Pone el archivo bro</label>
             <input type="text" required={true} value={nombre} onChange={e=>setNombre(e.currentTarget.value)}/>
-            <input type="file" className="form-group files" ref={selectedFiles} onChange={onChangeHandler}/>
+            <input type="file" multiple className="form-group files" ref={selectedFiles} onChange={onChangeHandler}/>
         <button type="submit" className="btn btn-success btn-block">Publicar</button>
     </form>
     </>

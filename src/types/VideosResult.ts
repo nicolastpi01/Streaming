@@ -5,9 +5,3 @@ export interface VideosResult{
     autor: string;
 }
 
-export interface PaginadoResponse {
-
-    offset : number;
-    size : number;
-    page : VideosResult[];
-}

@@ -30,18 +30,36 @@ export const searchVideos = async (search: string) => {
     return response.json()
 }
 
-export const searchAllVideos = async (page: number, token: string) =>  {
+//  token: string
+export const searchAllVideos = async (page: number) =>  {
     const allAPI = getServerAndPort + "/videos"
 
     const response = await fetch(allAPI, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            //'Authorization': `Bearer ${token}`
         }
     })
     return response.json()
 }
+
+/*
+
+export const traerBandejas = async (reqExtras: RequestHeaders) => {
+    const api = getURLs().BandejaMS
+
+    const detalles = await fetch(api, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + await getFreshToken(reqExtras.msalInstance)
+        }
+    })
+    return detalles.json()
+}
+*/
+
 
 export const searchVideo = async (id: string) : Promise<string> =>  {
     const mediaByIdAPI = getServerAndPort + "/getFileById?fileId=" + id

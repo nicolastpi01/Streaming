@@ -1,61 +1,107 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback, useReducer } from 'react';
 import ReactPlayer from 'react-player';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
-import { CardGroup, Card, CardDeck } from 'react-bootstrap';
-import Paginacion, { Props as PagProps} from "../components/Paginacion";
+import { CardGroup, Card, CardDeck, ListGroup, Button, Pagination } from 'react-bootstrap';
+//import Paginacion, { Props as PagProps} from "../components/Paginacion";
 import { useAuth0 } from '../react-auth0-spa';
+import { Console } from 'console';
+import VideoCard from '../components/VideoCard';
 
-export interface Props {
-  onSubmit: (search: string) => void;
-  onGETSugestions:(log:string)=>void;
-  onGETVideos:(log:string)=>void;
-}
+
 
 const Home : React.FC = () => {
     
-    const [reproductor,setreproductor] = useState<any>()
+    
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
+
+
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
     const [show, setShow] = useState(false);
-    const { getTokenSilently } = useAuth0();
+    //const { getTokenSilently } = useAuth0();
 
     // FOR PAGINING
-    const [offset, setOffset] = useState<number>(1) // cantidad de videos por pagina
+    const [offset, setOffset] = useState<number>(0) // cantidad de videos por pagina
     const [size, setSize] = useState<number>(0) // cantidad de videos totales
     const [pages, setPages] = useState<number[]>([]) // todas las paginas, por ejemplo: [0,1,2,3,4,5,6]
     const [currentPage, setCurrentpage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
-    const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
+    //const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
     // FOR PAGINING
-    const [currentCatalogo, setCurrentCatalogo] = useState<VideosResult[]>([]);
-    const [totalRecords, setTotalRecords] = useState<number>(0);
+    //const [currentCatalogo, setCurrentCatalogo] = useState<VideosResult[]>([]);
+    //const [totalRecords, setTotalRecords] = useState<number>(0);
     //AND ANOTHER ONE
 
-    useEffect(() => {getAllVideos(0)}, []);
-    
-    // Llama a la API que busca todos los videos
-    const getAllVideos = async(page: number) => {
-      try {
-          const token = await getTokenSilently();
-          searchAllVideos(page, token).then(result => {
-          setCatalogo(result.page);
-          setCurrentCatalogo(catalogo.slice(2));
-          setTotalRecords(catalogo.length);
-          setOffset(result.offset)
-          setSize(result.size)
-          setPages(calculatePages(Math.ceil(result.size / result.offset)))
-        
-          }).catch((e) => {} )
-        }
-        catch (error) {
-          console.log(error);
-        }
-      } 
-    
-       
-     
 
+  // Llama a la API que busca todos los videos
+ const getAllVideos = async () => {
+      
+  //const token = await getTokenSilently();
+  searchAllVideos(currentPage).then(result => {
+    setCatalogo(result.page);
+    setOffset(result.offset)
+    setSize(result.size)
+    //setCurrentCatalogo(catalogo.slice(2));
+    //setTotalRecords(catalogo.length);
+    setPages(calculatePages(Math.ceil(result.size / result.offset)))
+  }).catch((e) => {})     
+} 
+
+/*
+useEffect((() => 
+  {
+    document.title = "Home"
+    getAllVideos()
+  }), []);
+  
+  
+    const traer = async () => {
+        if (gS.msalInstance){
+        setIsLoading(true)
+        traerBandejas({msalInstance: gS.msalInstance})
+            .then(bs => {
+                setBandejas(bs)
+                setIsLoading(false)
+            }).catch(e => setIsLoading(false))
+        }
+    }
+
+    useEffect((() => {
+        document.title = "Inbox"
+        traer()
+    }), [])
+
+   */
+
+  
+
+  useEffect((() => 
+  {
+    console.log("CAMBIE CAMBIE")
+    console.log("CURRENT PAGE: " + currentPage)
+    searchAllVideos(currentPage).then(result => {
+      setCatalogo(result.page);
+      //setOffset(result.offset)
+      //setSize(result.size)
+      //setCurrentCatalogo(catalogo.slice(2));
+      //setTotalRecords(catalogo.length);
+      setPages(calculatePages(Math.ceil(result.size / result.offset)))
+    }).catch((e) => {})
+  }), [currentPage]);
+
+   
+  
+  const next = () => {
+    let nextPage = currentPage + 1;
+    console.log("next page: " +  nextPage)
+    //if (pageNextExist(nextPage)) 
+      setCurrentpage(1)
+  }
+
+  let pageNextExist = (page: number) => {
+    return page < Math.ceil(size / offset)
+  }
+  
     const calculatePages = (cantPaginas: number) => {
           var paginas :number[] = [];
           for (var i = 0; i < cantPaginas; i++) {
@@ -63,6 +109,7 @@ const Home : React.FC = () => {
          }
           return paginas
     }
+  
 
     // Llama a la API que busca las sugerencias
     const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
@@ -81,7 +128,7 @@ const Home : React.FC = () => {
         //props.onGETSugestions("ok");
         //console.log(sugestions)
       }).catch((e:any) => {
-        //console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
+        console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
         //props.onGETSugestions("bad");
       });
     }
@@ -101,6 +148,33 @@ const Home : React.FC = () => {
       return "https://localhost:5001/api/Video/getFileById?fileId="+ id
     }
 
+    const searchFromClicked = () => {
+      searchVideos(search).then(videos =>{
+        setCatalogo(videos)
+
+      }).catch(e => {
+        console.log("ERROR BUSCANDO LOS VIDEOS DESDE LA LISTA DE SUGERENCIAS" + e)
+      }) 
+    }
+    
+    function handlePageChange(page: number) {
+      console.log(`active page is ${page}`);
+      setCurrentpage(page)
+      
+    }
+
+    const onPageChanged = (data: any) => {
+      //const { allCountries } = this.state;
+      const { currentPage, totalPages, pageLimit } = data;
+  
+      const offset = (currentPage - 1) * pageLimit;
+      //const currentCountries = allCountries.slice(offset, offset + pageLimit);
+  
+      //this.setState({ currentPage, currentCountries, totalPages });
+    }
+    
+
+    /*
     const onPageChanged = (nextPage:number,data:PagProps) => {
       console.log("Cambio Pagina")
       setCurrentpage(nextPage);
@@ -109,11 +183,15 @@ const Home : React.FC = () => {
       const offset = (currentPage - 1) * pageLimit;
       setCurrentCatalogo(catalogo.slice(offset, offset + pageLimit))
       return currentPage;
-    };
+    }; */
+
+    /*
     const headerClass = [
       "text-dark py-2 pr-4 m-0",
       currentPage ? "border-gray border-right" : ""
     ].join(" ").trim();
+    */
+
 
     return <>
       <div className="container mb-5">
@@ -121,24 +199,41 @@ const Home : React.FC = () => {
 
       <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
         <div className="d-flex flex-row align-items-center">
-          <h2 className={headerClass}>
+          {/*           <h2 className={headerClass}>
                 <strong className="text-secondary">{catalogo.length}</strong>{" "}
                 Catalogos
           </h2>
+          */}
+        <div className="container-flex">
           <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit">
-            <input type="text" value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
+            <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
             <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
           </form>
 
+          {/* 
           <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
               {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
           </select>
+          */}
+          <ListGroup>
+            {searchSugestions.length > 0 ? searchSugestion.map(search => 
+              <ListGroup.Item action onClick={searchFromClicked}>
+                    {search}
+              </ListGroup.Item>) : <option>Sin datos</option>
+            }
+            
+          </ListGroup>
+
+        </div>
+
+
         </div>
         {/*
         <br></br>
         <br></br>
         <br></br>
         */}
+        {/* 
         <div className="d-flex flex-row py-4 align-items-center">
           <Paginacion
             pageLimit={2}
@@ -147,49 +242,38 @@ const Home : React.FC = () => {
             onPageChanged={onPageChanged}
           />
           </div>
+          */}
       </div>
 
-
+            {/* { currentCountries.map(country => <CountryCard key={country.cca3} country={country} />) }*/ }
         <div className="row">
           {
             catalogo.length > 0 ? //Si hay videos, se muestran los filtrados
-              currentCatalogo.map(video =>
+
+            
+              catalogo.map(video =>
                 
                 <div className="col-sm-3">
-                                              
-                    <Card style={{ height: '25rem' }}>
-                    <Card.Body>
-                      <Card.Title>{video.nombre}</Card.Title>
-                      
-                      <ReactPlayer style={{ }}
-                        ref={(player:any) => setreproductor(player) }
-                        width={"small"}
-                        height={"small"}
-                        url={sourceurl(video.indice.toString())}
-                        controls={true}
-                        fluid={true}
-                      >
-                      </ReactPlayer>    
-                      <Card.Text>
-                        {video.descripcion.slice(0,20)}
-                      </Card.Text>
-                    </Card.Body>
-                    <Card.Footer>
-                      <small className="text-muted">{video.autor}</small>
-                      <br></br>
-                      <small className="text-muted">Subido hace 15 minutos</small>
-                    </Card.Footer>
-                  </Card>   
+
+                  <VideoCard {...video}/>
+                                                   
               </div>)
              : <h1>No hay resultados para su busqueda</h1>
               
           }
           
           </div>
+
+          
       <br></br>
-      <br></br>
-      <br></br>
+      <div className="container-fluid">
+          <div className="row">
+              <Pagination ranan={10} offset={offset} pageNeighbours={2} totalPages={10} onPageChanged={onPageChanged} />
+          </div>
       </div>
+
+      </div>
+      {/* <div id='page-bottom-boundary' style={{ border: '1px solid red' }} ref={bottomBoundaryRef}></div> */}
       </div>
     </>
 }

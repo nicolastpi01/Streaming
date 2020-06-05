@@ -32,7 +32,7 @@ export const searchVideos = async (search: string) => {
 
 //  token: string
 export const searchAllVideos = async (page: number) =>  {
-    const allAPI = getServerAndPort + "/videos"
+    const allAPI = getServerAndPort + "/videos?page=" + page
 
     const response = await fetch(allAPI, {
         method: 'GET',

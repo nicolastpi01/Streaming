@@ -2,11 +2,12 @@ import React, { useEffect, useState, useRef, useCallback, useReducer } from 'rea
 import ReactPlayer from 'react-player';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
-import { CardGroup, Card, CardDeck, ListGroup, Button, Pagination } from 'react-bootstrap';
+import { CardGroup, Card, CardDeck, ListGroup, Button } from 'react-bootstrap';
 //import Paginacion, { Props as PagProps} from "../components/Paginacion";
 import { useAuth0 } from '../react-auth0-spa';
 import { Console } from 'console';
 import VideoCard from '../components/VideoCard';
+import { Pagination } from '../components/Pagination';
 
 
 
@@ -25,7 +26,8 @@ const Home : React.FC = () => {
     const [offset, setOffset] = useState<number>(0) // cantidad de videos por pagina
     const [size, setSize] = useState<number>(0) // cantidad de videos totales
     const [pages, setPages] = useState<number[]>([]) // todas las paginas, por ejemplo: [0,1,2,3,4,5,6]
-    const [currentPage, setCurrentpage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
+    const [currentPage, setCurrentPage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
+    const [pagesToDisplay,] = useState(4)
     //const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
     // FOR PAGINING
     //const [currentCatalogo, setCurrentCatalogo] = useState<VideosResult[]>([]);
@@ -34,10 +36,10 @@ const Home : React.FC = () => {
 
 
   // Llama a la API que busca todos los videos
- const getAllVideos = async () => {
+ const getAllVideos = async (page: number) => {
       
   //const token = await getTokenSilently();
-  searchAllVideos(currentPage).then(result => {
+  searchAllVideos(page).then(result => {
     setCatalogo(result.page);
     setOffset(result.offset)
     setSize(result.size)
@@ -47,14 +49,18 @@ const Home : React.FC = () => {
   }).catch((e) => {})     
 } 
 
-/*
+
 useEffect((() => 
   {
     document.title = "Home"
-    getAllVideos()
-  }), []);
+    getAllVideos(currentPage)
+    console.log("THE CURRENT PAGE: " + currentPage)
+  }), [currentPage]);
+
+  // EN EL HOME DEBERIA OBSERVAR UNA PROPIEDAD QUE ME PASAN DESDE APP.TXS QUE SI CAMBIA LLAMO A LA API PARA BUSCAR LOS VIDEOS
   
   
+/*  
     const traer = async () => {
         if (gS.msalInstance){
         setIsLoading(true)
@@ -75,6 +81,7 @@ useEffect((() =>
 
   
 
+   /*
   useEffect((() => 
   {
     console.log("CAMBIE CAMBIE")
@@ -85,9 +92,9 @@ useEffect((() =>
       //setSize(result.size)
       //setCurrentCatalogo(catalogo.slice(2));
       //setTotalRecords(catalogo.length);
-      setPages(calculatePages(Math.ceil(result.size / result.offset)))
+      //setPages(calculatePages(Math.ceil(result.size / result.offset)))
     }).catch((e) => {})
-  }), [currentPage]);
+  }), []); */
 
    
   
@@ -95,7 +102,7 @@ useEffect((() =>
     let nextPage = currentPage + 1;
     console.log("next page: " +  nextPage)
     //if (pageNextExist(nextPage)) 
-      setCurrentpage(1)
+      setCurrentPage(1)
   }
 
   let pageNextExist = (page: number) => {
@@ -159,52 +166,19 @@ useEffect((() =>
     
     function handlePageChange(page: number) {
       console.log(`active page is ${page}`);
-      setCurrentpage(page)
+      setCurrentPage(page)
       
     }
 
-    const onPageChanged = (data: any) => {
-      //const { allCountries } = this.state;
-      const { currentPage, totalPages, pageLimit } = data;
-  
-      const offset = (currentPage - 1) * pageLimit;
-      //const currentCountries = allCountries.slice(offset, offset + pageLimit);
-  
-      //this.setState({ currentPage, currentCountries, totalPages });
-    }
     
-
-    /*
-    const onPageChanged = (nextPage:number,data:PagProps) => {
-      console.log("Cambio Pagina")
-      setCurrentpage(nextPage);
-      setTotalRecords(data.totalRecords)//setState({ , data. });
-      const pageLimit = data.pageLimit;
-      const offset = (currentPage - 1) * pageLimit;
-      setCurrentCatalogo(catalogo.slice(offset, offset + pageLimit))
-      return currentPage;
-    }; */
-
-    /*
-    const headerClass = [
-      "text-dark py-2 pr-4 m-0",
-      currentPage ? "border-gray border-right" : ""
-    ].join(" ").trim();
-    */
-
+   
 
     return <>
-      <div className="container mb-5">
-      <div className="row d-flex flex-row py-5">
+      <div className="container-fluid">
 
-      <div className="w-100 px-4 py-5 d-flex flex-row flex-wrap align-items-center justify-content-between">
-        <div className="d-flex flex-row align-items-center">
-          {/*           <h2 className={headerClass}>
-                <strong className="text-secondary">{catalogo.length}</strong>{" "}
-                Catalogos
-          </h2>
-          */}
-        <div className="container-flex">
+
+        
+        <div className="col">
           <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit">
             <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
             <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
@@ -225,30 +199,11 @@ useEffect((() =>
           </ListGroup>
 
         </div>
+      
 
-
-        </div>
-        {/*
-        <br></br>
-        <br></br>
-        <br></br>
-        */}
-        {/* 
-        <div className="d-flex flex-row py-4 align-items-center">
-          <Paginacion
-            pageLimit={2}
-            pageNeighbours={1}
-            totalRecords={catalogo.length}       
-            onPageChanged={onPageChanged}
-          />
-          </div>
-          */}
-      </div>
-
-            {/* { currentCountries.map(country => <CountryCard key={country.cca3} country={country} />) }*/ }
-        <div className="row">
+      <div className="row" style={{textAlign:"center", marginTop:"3%"}}>
           {
-            catalogo.length > 0 ? //Si hay videos, se muestran los filtrados
+            catalogo.length > 0 ?
 
             
               catalogo.map(video =>
@@ -258,23 +213,29 @@ useEffect((() =>
                   <VideoCard {...video}/>
                                                    
               </div>)
-             : <h1>No hay resultados para su busqueda</h1>
+             : <p>No hay resultados para su búsqueda</p>
               
-          }
-          
-          </div>
+          }   
+      </div>
 
-          
       <br></br>
+       
+
       <div className="container-fluid">
-          <div className="row">
-              <Pagination ranan={10} offset={offset} pageNeighbours={2} totalPages={10} onPageChanged={onPageChanged} />
+          <div className="row justify-content-center justify-items-center">
+
+            <Pagination totalItems={size} itemsPerPage={offset} page={currentPage} pagesToDisplay={pagesToDisplay} onPageChange={async (e: { target: { innerHTML: string; }; }) => {
+                const pageRequested = parseInt(e.target.innerHTML, 10)
+                //const paginasTotales = Math.ceil(size / offset)
+                setCurrentPage(pageRequested)
+            }}
+            /> 
           </div>
       </div>
-
-      </div>
-      {/* <div id='page-bottom-boundary' style={{ border: '1px solid red' }} ref={bottomBoundaryRef}></div> */}
-      </div>
+      
+      
+    </div>
+         
     </>
 }
 

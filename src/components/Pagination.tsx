@@ -1,190 +1,50 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import {Nav, Form, Col, Button, Row, Container} from 'react-bootstrap';
+import React, { Fragment } from "react"
 
-
-interface Paginated {
-  ranan: number,
-  offset: number,
-  pageNeighbours: number,
-  totalPages: number,
-  onPageChange?: () => void
+type PaginationProps = {
+    totalItems: number,
+    itemsPerPage: number,
+    page: number,
+    pagesToDisplay: number,
+    onPageChange: any
 }
 
+export const Pagination = ({ totalItems, itemsPerPage, page, pagesToDisplay, onPageChange }: PaginationProps) => {
 
-//export const OperacionModal: React.FC<Operacion> = (props) => {
-export const Pagination: React.FC<Paginated> = (props) => {
+  console.log("LA PAGINA INICIAL: " + page) // 0
 
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [pages, setPages] = useState<any[]>([]);
+  console.log("TOTAL DE VIDEOS: " + totalItems) // TOTAL PAGES
 
-  // pageNeighbours can be: 0, 1 or 2
-  const pageNeighbours = () : number => {  
-    return Math.max(0, Math.min(props.pageNeighbours, 2))
-  }
-  
-  const LEFT_PAGE = 'LEFT';
-  const RIGHT_PAGE = 'RIGHT';
-
-/**
- * Helper method for creating a range of numbers
- * range(1, 5) => [1, 2, 3, 4, 5] NO
- * range(0, 5) => [0, 1, 2, 3, 4] SI
- */
-const range = (from: number, to: number, step = 1) : any[] => {
-  let i = from;
-  const range = [];
-
-  while (i < to) {
-    range.push(i);
-    i += step;
-  }
-
-  return range;
-}
-
-const gotoPage = (page: any) => {
-  //const { onPageChanged = f => f } = this.props;
-
-  const currentPage = Math.max(0, Math.min(page, props.totalPages));
-
-  /*
-  const paginationData = {
-    currentPage,
-    totalPages: this.totalPages,
-    pageLimit: this.pageLimit,
-    totalRecords: this.totalRecords
-  }; */
-
-  //this.setState({ currentPage }, () => onPageChanged(paginationData));
-  setCurrentPage(currentPage)
-}
-
-
-const handleClick = (page: any) => {
-  //evt.preventDefault();
-  gotoPage(page);
-}
-
-const handleMoveLeft = () => {
-  //evt.preventDefault();
-  gotoPage(currentPage - (props.pageNeighbours * 2) - 1);
-}
-
-const handleMoveRight = () => {
-  //evt.preventDefault();
-  gotoPage(currentPage + (props.pageNeighbours * 2) + 1);
-} 
-
-
-/**
-   * Let's say we have 10 pages and we set pageNeighbours to 2
-   * Given that the current page is 6
-   * The pagination control will look like the following:
-   *
-   * (1) < {4 5} [6] {7 8} > (10)
-   *
-   * (x) => terminal pages: first and last page(always visible)
-   * [x] => represents current page
-   * {...x} => represents page neighbours
-   */
-  const fetchPageNumbers = () => {
-
-    const totalPages = props.ranan;
-    const pageNeighbours = props.pageNeighbours;
-
-    /**
-     * totalNumbers: the total page numbers to show on the control
-     * totalBlocks: totalNumbers + 2 to cover for the left(<) and right(>) controls
-     */
-    const totalNumbers = (pageNeighbours * 2) + 3;
-    const totalBlocks = totalNumbers + 2;
-
-    if (totalPages > totalBlocks) {
-
-      const startPage = Math.max(2, currentPage - pageNeighbours);
-      const endPage = Math.min(totalPages - 1, currentPage + pageNeighbours);
-
-      let pages = range(startPage, endPage);
-
-      /**
-       * hasLeftSpill: has hidden pages to the left
-       * hasRightSpill: has hidden pages to the right
-       * spillOffset: number of hidden pages either to the left or to the right
-       */
-      const hasLeftSpill = startPage > 2;
-      const hasRightSpill = (totalPages - endPage) > 1;
-      const spillOffset = totalNumbers - (pages.length + 1);
-
-      switch (true) {
-        // handle: (1) < {5 6} [7] {8 9} (10)
-        case (hasLeftSpill && !hasRightSpill): {
-          const extraPages = range(startPage - spillOffset, startPage - 1);
-          pages = [LEFT_PAGE, ...extraPages, ...pages];
-          break;
+    const range = (start: number, end: number) => {
+        var foo = [];
+        for (var i = start; i <= end; i++) {
+            foo.push(i);
         }
-
-        // handle: (1) {2 3} [4] {5 6} > (10)
-        case (!hasLeftSpill && hasRightSpill): {
-          const extraPages = range(endPage + 1, endPage + spillOffset);
-          pages = [...pages, ...extraPages, RIGHT_PAGE];
-          break;
-        }
-
-        // handle: (1) < {4 5} [6] {7 8} > (10)
-        case (hasLeftSpill && hasRightSpill):
-        default: {
-          pages = [LEFT_PAGE, ...pages, RIGHT_PAGE];
-          break;
-        }
-      }
-
-      setPages([1, ...pages, totalPages]);
-
+        console.log("EL RANGO: " + foo)
+        return foo;
     }
 
-    setPages(range(1, totalPages));
+    // EL MINIMO DEBE SER CERO & EL MAXIMO 1
+    const totalPages = Math.ceil(totalItems / itemsPerPage) // = 2
+    console.log("PAGINAS TOTALES: " + totalPages)
+    // HAGO UN CALCULO PARA DETERMINAR SI ES LA ULTIMA PAGINA (page === totalPages-1 ? page-1 : page) SI ES LA ULTIMA LE QUITO UNO PARA QUE FUNCIONE EL CALCULO, SINO LA DEJO
+    const min = Math.max(0, Math.ceil( (page === totalPages-1 ? page-1 : page) - pagesToDisplay / 2)) // MIN = 1
+    console.log("EL MINIMO: " + min)
+    const max = Math.min(min + pagesToDisplay - 1, totalPages) // MAX = 2
+    console.log("EL MAXIMO: " + max)
 
-  }
+    const pageNumbers = range(min, max) // rango [1, 2] OJO, QUE ACÁ LE MANDE -1 AL MAX
+        .map(p => p === page ? // No, la page es 0
+            <li className="page-item active" key={p}>
+                <button className="page-link" onClick={onPageChange}>{p}</button>
+            </li>
+            : <li className="page-item" key={p}>
+                <button className="page-link" onClick={onPageChange}>{p}</button>
+            </li>)
 
-  
-  return (
-    <Fragment>
-      <nav aria-label="Pagination">
-        <ul className="pagination">
-          { pages.map((page, index) => {
-
-            if (page === LEFT_PAGE) return (
-              <li key={index} className="page-item">
-                <a className="page-link" href="#" aria-label="Previous" onClick={handleMoveLeft}>
-                  <span aria-hidden="true">&laquo;</span>
-                  <span className="sr-only">Previous</span>
-                </a>
-              </li>
-            );
-
-            if (page === RIGHT_PAGE) return (
-              <li key={index} className="page-item">
-                <a className="page-link" href="#" aria-label="Next" onClick={handleMoveRight}>
-                  <span aria-hidden="true">&raquo;</span>
-                  <span className="sr-only">Next</span>
-                </a>
-              </li>
-            );
-
-            return (
-              <li key={index} className={`page-item${ currentPage === page ? ' active' : ''}`}>
-                {/* <a className="page-link" href="#" onClick={ handleClick(page) }>{ page }</a> */}
-                <a className="page-link" href="#">{ page }</a>
-              </li>
-            );
-
-          }) }
-
-        </ul>
-      </nav>
+    const pages = <Fragment>
+        <ul className="pagination justify-content-center">{pageNumbers}</ul>
     </Fragment>
-  );
-
+    return pages
 }
 
 

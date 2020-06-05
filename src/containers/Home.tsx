@@ -47,8 +47,9 @@ const Home : React.FC = () => {
 useEffect((() => 
   {
     document.title = "Home"
-    getAllVideos(currentPage)
     console.log("THE CURRENT PAGE: " + currentPage)
+    getAllVideos(currentPage)
+    
   }), [currentPage]);
 
   

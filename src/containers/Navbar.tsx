@@ -10,8 +10,8 @@ return (
 
 <Navbar bg="dark" variant="light">
     
-    {/* mr-auto aling left */}
-    <Nav className="mx-auto"> 
+    {/* mx-auto aling left */}
+    <Nav className="mr-auto"> 
     <Form inline>
     <Nav.Link href="/"><img
               src="iconW.ico"

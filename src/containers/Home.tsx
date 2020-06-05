@@ -144,11 +144,11 @@ useEffect((() =>
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       searchVideos(search).then(videos =>{
         setCatalogo(videos)
+        setSearchSugestion([])
         //onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
         //console.log(videos)
         //props.onSubmit(videos.length);
       }).catch(e => {}/*console.log("ERROR BUSCANDO LOS VIDEOS" + e)*/)
-      event.preventDefault();
     }
 
     function sourceurl(id: string){
@@ -158,20 +158,17 @@ useEffect((() =>
     const searchFromClicked = () => {
       searchVideos(search).then(videos =>{
         setCatalogo(videos)
+        setSearchSugestion([])
 
       }).catch(e => {
         console.log("ERROR BUSCANDO LOS VIDEOS DESDE LA LISTA DE SUGERENCIAS" + e)
       }) 
     }
-    
-    function handlePageChange(page: number) {
-      console.log(`active page is ${page}`);
-      setCurrentPage(page)
-      
-    }
 
+    const handleBlur = () => {
+      setSearchSugestion([])
+    }
     
-   
 
     return <>
       <div className="container-fluid">
@@ -179,19 +176,14 @@ useEffect((() =>
 
         
         <div className="col">
-          <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit">
+          <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit" onBlur={handleBlur}>
             <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
             <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
           </form>
 
-          {/* 
-          <select value={search} defaultValue="" onChange={e => setSearch(e.currentTarget.value)}>
-              {searchSugestions.length > 0 ? searchSugestion.map(s => <option value={s}>{s}</option>) : <option value={""}>Sin datos</option>}
-          </select>
-          */}
           <ListGroup>
             {searchSugestions.length > 0 ? searchSugestion.map(search => 
-              <ListGroup.Item action onClick={searchFromClicked}>
+              <ListGroup.Item action onClick={searchFromClicked} >
                     {search}
               </ListGroup.Item>) : <option>Sin datos</option>
             }

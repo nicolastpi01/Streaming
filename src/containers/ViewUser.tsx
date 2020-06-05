@@ -28,11 +28,19 @@ const ViewUser : React.FC = (props) => {
             selectedFiles.current === undefined ||
             selectedFiles.current == null ||
             selectedFiles.current.files == null ||
-            selectedFiles.current.files.length == 0 )
+            selectedFiles.current.files.length != 2 )
             return;
+        let videoIndice = selectedFiles.current.files[0].type.startsWith("video")? 0 :
+            selectedFiles.current.files[1].type.startsWith("video")? 1:
+            -1;
+        let imagenIndice = selectedFiles.current.files[0].type.startsWith("image")? 0 :
+            selectedFiles.current.files[1].type.startsWith("image")? 1:
+            -1;
+        if(videoIndice == -1 || imagenIndice == -1) return;
 
         const data = new FormData()
-        data.append('video', selectedFiles.current.files[0]);
+        data.append('video', selectedFiles.current.files[videoIndice]);
+        data.append('imagen', selectedFiles.current.files[imagenIndice]);
         data.append('nombre', nombre);
         let res = sendVideo(data);
         console.log(selectedFiles.current);

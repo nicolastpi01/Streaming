@@ -121,12 +121,12 @@ useEffect((() =>
 
         
         <div className="container-fluid" style={{textAlign:"center", marginTop:"3px"}}>
-          <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit" onBlur={handleBlur}>
-            <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" style={{width:"400px"}} />
+          <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit" onBlur={handleBlur}> {/* ESTA ANDANDO MAL EL ONBLUR*/}
+            <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" style={{width:"410px"}} />
             <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
           </form>
 
-          <ListGroup>
+          <ListGroup style={{marginLeft:"38%", width:"24%"}}>
             {searchSugestions.length > 0 ? searchSugestion.map(search => 
               <ListGroup.Item action onClick={searchFromClicked} >
                     {search}

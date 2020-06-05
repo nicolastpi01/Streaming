@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useRef, useCallback, useReducer } from 'react';
-import ReactPlayer from 'react-player';
+import React, { useEffect, useState } from 'react';
 import { VideosResult } from '../types/VideosResult';
 import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
-import { CardGroup, Card, CardDeck, ListGroup, Button } from 'react-bootstrap';
-//import Paginacion, { Props as PagProps} from "../components/Paginacion";
+import {ListGroup} from 'react-bootstrap';
 import { useAuth0 } from '../react-auth0-spa';
-import { Console } from 'console';
 import VideoCard from '../components/VideoCard';
 import { Pagination } from '../components/Pagination';
 
@@ -15,8 +12,6 @@ const Home : React.FC = () => {
     
     
     const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
-
-
     const [search, setSearch] = useState<string>("")
     const [searchSugestion, setSearchSugestion] = useState<string[]>([])
     const [show, setShow] = useState(false);
@@ -38,7 +33,6 @@ const Home : React.FC = () => {
   // Llama a la API que busca todos los videos
  const getAllVideos = async (page: number) => {
       
-  //const token = await getTokenSilently();
   searchAllVideos(page).then(result => {
     setCatalogo(result.page);
     setOffset(result.offset)
@@ -57,46 +51,6 @@ useEffect((() =>
     console.log("THE CURRENT PAGE: " + currentPage)
   }), [currentPage]);
 
-  // EN EL HOME DEBERIA OBSERVAR UNA PROPIEDAD QUE ME PASAN DESDE APP.TXS QUE SI CAMBIA LLAMO A LA API PARA BUSCAR LOS VIDEOS
-  
-  
-/*  
-    const traer = async () => {
-        if (gS.msalInstance){
-        setIsLoading(true)
-        traerBandejas({msalInstance: gS.msalInstance})
-            .then(bs => {
-                setBandejas(bs)
-                setIsLoading(false)
-            }).catch(e => setIsLoading(false))
-        }
-    }
-
-    useEffect((() => {
-        document.title = "Inbox"
-        traer()
-    }), [])
-
-   */
-
-  
-
-   /*
-  useEffect((() => 
-  {
-    console.log("CAMBIE CAMBIE")
-    console.log("CURRENT PAGE: " + currentPage)
-    searchAllVideos(currentPage).then(result => {
-      setCatalogo(result.page);
-      //setOffset(result.offset)
-      //setSize(result.size)
-      //setCurrentCatalogo(catalogo.slice(2));
-      //setTotalRecords(catalogo.length);
-      //setPages(calculatePages(Math.ceil(result.size / result.offset)))
-    }).catch((e) => {})
-  }), []); */
-
-   
   
   const next = () => {
     let nextPage = currentPage + 1;
@@ -120,9 +74,7 @@ useEffect((() =>
 
     // Llama a la API que busca las sugerencias
     const handleChange = (event : React.ChangeEvent<HTMLInputElement>) => {
-      //console.log("Division con barra: " + Math.ceil(size / offset));
-      //console.log(pages);
-      //console.log(event.target.value);
+      //if(event.target.value === "") handleBlur() cuando el campo queda vacio deberia borrar las sugerencias
       setSearch(event.target.value);
       getSugestions();
       
@@ -132,8 +84,6 @@ useEffect((() =>
     const getSugestions = async () => {
       searchSugestions(search).then(sugestions =>{
         setSearchSugestion(sugestions)
-        //props.onGETSugestions("ok");
-        //console.log(sugestions)
       }).catch((e:any) => {
         console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
         //props.onGETSugestions("bad");
@@ -145,16 +95,10 @@ useEffect((() =>
       searchVideos(search).then(videos =>{
         setCatalogo(videos)
         setSearchSugestion([])
-        //onCambioVideo(parseInt(videos[0].indice)) // Despues se tiene que sacar !!!!
-        //console.log(videos)
-        //props.onSubmit(videos.length);
-      }).catch(e => {}/*console.log("ERROR BUSCANDO LOS VIDEOS" + e)*/)
+      }).catch(e => {console.log("ERROR BUSCANDO LOS VIDEOS" + e)})
     }
 
-    function sourceurl(id: string){
-      return "https://localhost:5001/api/Video/getFileById?fileId="+ id
-    }
-
+    // ES IGUAL A LA DE ARRIBA
     const searchFromClicked = () => {
       searchVideos(search).then(videos =>{
         setCatalogo(videos)
@@ -165,6 +109,7 @@ useEffect((() =>
       }) 
     }
 
+    
     const handleBlur = () => {
       setSearchSugestion([])
     }
@@ -175,9 +120,9 @@ useEffect((() =>
 
 
         
-        <div className="col">
+        <div className="container-fluid" style={{textAlign:"center", marginTop:"3px"}}>
           <form onSubmit={handleSubmit} data-testid="busqueda-recomendaciones-submit" onBlur={handleBlur}>
-            <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" />
+            <input type="text" placeholder="Buscar.." value={search} onChange={handleChange} data-testid="busqueda-recomendaciones-texto" style={{width:"400px"}} />
             <input type="submit" value="&#128269;" data-testid="busqueda-recomendaciones-boton" />
           </form>
 

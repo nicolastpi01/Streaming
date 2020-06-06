@@ -17,12 +17,19 @@ return (
         <header>
           <NavBar/>
         </header>
-        
+        <body>
         <Switch>
-          <Route path="/" exact/>
+          <Route path="/" exact component={Home}/>
+          {/*todos los demas componentes deben tener Home abajo*/}
           <Route path="/profile" component={ViewUser}/>
         </Switch>
-      {/* 
+        </body>
+      </Router>
+    </div>
+  );
+}
+
+/* volver a poner
      <Switch>
         <Route path="/" exact />
         <Route exact path="/startSession" component={ConfiguredHome} />
@@ -30,21 +37,7 @@ return (
         <PrivateRoute path="/profile" component={Profile} />
         <PrivateRoute path="/Home" component={Home} />
       </Switch>
-      */}
-      </Router>
-
-       
-      <body>
-        <Home/> 
-      </body>
-      
-    </div>
-
-    
-  );
-
-}
-
+*/
 export default App;
 
 

@@ -8,7 +8,7 @@ import Home from './containers/Home';
 import ViewUser from './containers/ViewUser';
 
 const App : React.FC = () => {
-  //const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
+const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
   
 
 return (
@@ -21,7 +21,7 @@ return (
         <Switch>
           <Route path="/" exact component={Home}/>
           {/*todos los demas componentes deben tener Home abajo*/}
-          <Route path="/profile" component={ViewUser}/>
+          {isAuthenticated? <Route path="/profile" component={ViewUser}/> : <></>}
         </Switch>
         </body>
       </Router>

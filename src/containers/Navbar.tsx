@@ -1,11 +1,11 @@
 import React from "react";
 import { useAuth0 } from "../react-auth0-spa";
 import { Navbar, Form, Nav, Button } from "react-bootstrap";
-
+import history from "../utils/history";
 
 const NavBar = () => {
     const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
-  
+
 return (
 
 <Navbar bg="dark" variant="light">
@@ -34,14 +34,20 @@ return (
 
           
 
-    {isAuthenticated && (
+    {isAuthenticated && (<>
         <Button variant="outline-light" onClick={() =>
             logout()}>Log Out</Button>
+        <Navbar.Brand className="sm" onClick={()=>history.push("/profile")} >
+            <Button variant="outline-light">Profile</Button>
+        </Navbar.Brand>
+        </>
     )}
 
     
     {!isAuthenticated && (
-          <Nav.Link href="/Profile"><Button variant="outline-light">Home</Button></Nav.Link>
+        <Navbar.Brand className="sm" onClick={()=>history.push("/")} >
+            <Button variant="outline-light">Home</Button>
+        </Navbar.Brand>
       )}
     
     </Form>

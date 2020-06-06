@@ -19,8 +19,9 @@ return (
         </header>
         
         <Switch>
-          <Route path="/" exact/>
+          {/* <Route path="/" exact/> */}
           <Route path="/profile" component={ViewUser}/>
+          <Route path="/" component={Home}/>
         </Switch>
       {/* 
      <Switch>
@@ -33,11 +34,11 @@ return (
       */}
       </Router>
 
-       
+      {/* 
       <body>
         <Home/> 
       </body>
-      
+      */}
     </div>
 
     

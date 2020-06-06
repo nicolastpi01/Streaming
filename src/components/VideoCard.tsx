@@ -1,21 +1,19 @@
 import { VideosResult } from "../types/VideosResult";
 import { Card } from "react-bootstrap";
 import React, { useState } from 'react';
-
+import history from "../utils/history";
 
     
 const VideoCard: React.FC<VideosResult> = (props) => {
-
-    const [reproductor,setreproductor] = useState<any>()
-    /*
+  
     const verVideo = (video:VideosResult) => history.push({
       pathname: '/video',
       //search: '?query=abc',
       state: video
-    });onClick={()=>verVideo(video)}*/
+    });
 
     return (
-      <Card style={{ height: '25rem' }} >
+      <Card style={{ height: '25rem' }} onClick={()=>verVideo(props)} >
         <Card.Img variant="bottom" src={props.imagenURL} />
         <Card.Body>
           <Card.Title>{props.nombre}</Card.Title>

@@ -152,6 +152,7 @@ const App : React.FC = () => {
       <Nav.Link href="/profile"><p style={{color : "white", marginTop : "16px"}}>Streaming</p></Nav.Link>
       </Form>
     <Navbar.Brand className="sm" onClick={()=>history.push("media")} >YourMedia</Navbar.Brand>
+    <Navbar.Brand className="sm" onClick={()=>history.push("startSession")} >Home</Navbar.Brand>
     </Nav>
     
 

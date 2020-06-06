@@ -6,9 +6,10 @@ import { useAuth0 } from "./react-auth0-spa";
 import NavBar from './containers/Navbar';
 import Home from './containers/Home';
 import ViewUser from './containers/ViewUser';
+import Reproductor from './containers/Reproductor';
 
 const App : React.FC = () => {
-  //const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
+const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
   
 
 return (
@@ -17,13 +18,24 @@ return (
         <header>
           <NavBar/>
         </header>
-        
+        <body>
         <Switch>
-          {/* <Route path="/" exact/> */}
-          <Route path="/profile" component={ViewUser}/>
-          <Route path="/" component={Home}/>
+          <Route path="/" exact component={Home}/>
+          {/*todos los demas componentes deben tener Home abajo*/}
+          {isAuthenticated? 
+            <>
+              <Route path="/profile" component={ViewUser} />
+              <Route path="/video" component={Reproductor}/>
+            </>:
+            <></>}
         </Switch>
-      {/* 
+        </body>
+      </Router>
+    </div>
+  );
+}
+
+/* volver a poner
      <Switch>
         <Route path="/" exact />
         <Route exact path="/startSession" component={ConfiguredHome} />
@@ -31,21 +43,7 @@ return (
         <PrivateRoute path="/profile" component={Profile} />
         <PrivateRoute path="/Home" component={Home} />
       </Switch>
-      */}
-      </Router>
-
-      {/* 
-      <body>
-        <Home/> 
-      </body>
-      */}
-    </div>
-
-    
-  );
-
-}
-
+*/
 export default App;
 
 

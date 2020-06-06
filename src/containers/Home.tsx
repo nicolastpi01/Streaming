@@ -23,12 +23,7 @@ const Home : React.FC = () => {
     const [pages, setPages] = useState<number[]>([]) // todas las paginas, por ejemplo: [0,1,2,3,4,5,6]
     const [currentPage, setCurrentPage] = useState<number>(0) // La pagina donde esta, si cambia onScroll currentPage ++
     const [pagesToDisplay,] = useState(4)
-    //const [scroll, setScroll] = useState<boolean>(false) // Controla si el usuario scrolleo para ver más videos. Arranca en false, no scrolleo
-    // FOR PAGINING
-    //const [currentCatalogo, setCurrentCatalogo] = useState<VideosResult[]>([]);
-    //const [totalRecords, setTotalRecords] = useState<number>(0);
-    //AND ANOTHER ONE
-
+    
 
   // Llama a la API que busca todos los videos
  const getAllVideos = async (page: number) => {
@@ -37,8 +32,6 @@ const Home : React.FC = () => {
     setCatalogo(result.page);
     setOffset(result.offset)
     setSize(result.size)
-    //setCurrentCatalogo(catalogo.slice(2));
-    //setTotalRecords(catalogo.length);
     setPages(calculatePages(Math.ceil(result.size / result.offset)))
   }).catch((e) => {})     
 } 
@@ -52,17 +45,6 @@ useEffect((() =>
     
   }), [currentPage]);
 
-  
-  const next = () => {
-    let nextPage = currentPage + 1;
-    console.log("next page: " +  nextPage)
-    //if (pageNextExist(nextPage)) 
-      setCurrentPage(1)
-  }
-
-  let pageNextExist = (page: number) => {
-    return page < Math.ceil(size / offset)
-  }
   
     const calculatePages = (cantPaginas: number) => {
           var paginas :number[] = [];
@@ -87,7 +69,6 @@ useEffect((() =>
         setSearchSugestion(sugestions)
       }).catch((e:any) => {
         console.log("ERROR BUSCANDO LAS SUGERENCIAS" + e);
-        //props.onGETSugestions("bad");
       });
     }
   
@@ -115,7 +96,6 @@ useEffect((() =>
       setSearchSugestion([])
     }
     
-
     return <>
       <div className="container-fluid">
 
@@ -164,7 +144,6 @@ useEffect((() =>
 
             <Pagination totalItems={size} itemsPerPage={offset} page={currentPage} pagesToDisplay={pagesToDisplay} onPageChange={async (e: { target: { innerHTML: string; }; }) => {
                 const pageRequested = parseInt(e.target.innerHTML, 10)
-                //const paginasTotales = Math.ceil(size / offset)
                 setCurrentPage(pageRequested)
             }}
             /> 

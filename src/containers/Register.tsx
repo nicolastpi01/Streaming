@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useAuth0 } from "../react-auth0-spa";
 
-
+/*
   const Register = () => {
     const [showResult, setShowResult] = useState(false);
     const [apiMessage, setApiMessage] = useState("");
@@ -39,3 +39,4 @@ import { useAuth0 } from "../react-auth0-spa";
   };
   
   export default Register;
+  */

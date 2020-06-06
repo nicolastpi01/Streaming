@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { VideosResult } from '../types/VideosResult';
-import { searchSugestions, searchVideos, searchAllVideos } from '../APIs/mediaAPI';
+import { searchSugestions, searchVideos, searchAllVideos, getImagen } from '../APIs/mediaAPI';
 import {ListGroup} from 'react-bootstrap';
 import { useAuth0 } from '../react-auth0-spa';
 import VideoCard from '../components/VideoCard';
@@ -29,6 +29,9 @@ const Home : React.FC = () => {
  const getAllVideos = async (page: number) => {
       
   searchAllVideos(page).then(result => {
+    result.page.forEach( (videores :VideosResult) => 
+          videores.imagenURL = getImagen(videores.indice.toString())
+        );
     setCatalogo(result.page);
     setOffset(result.offset)
     setSize(result.size)

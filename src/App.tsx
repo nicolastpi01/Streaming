@@ -5,6 +5,7 @@ import history from "./utils/history";
 import { useAuth0 } from "./react-auth0-spa";
 import NavBar from './containers/Navbar';
 import Home from './containers/Home';
+import ViewUser from './containers/ViewUser';
 
 const App : React.FC = () => {
   //const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
@@ -19,6 +20,7 @@ return (
         
         <Switch>
           <Route path="/" exact/>
+          <Route path="/profile" component={ViewUser}/>
         </Switch>
       {/* 
      <Switch>
@@ -30,9 +32,12 @@ return (
       </Switch>
       */}
       </Router>
+
+       
       <body>
         <Home/> 
       </body>
+      
     </div>
 
     

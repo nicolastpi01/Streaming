@@ -3,5 +3,6 @@ export interface VideosResult{
     nombre:string;
     descripcion: string;
     autor: string;
+    imagenURL: string | undefined;
 }
 

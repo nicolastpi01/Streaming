@@ -40,7 +40,7 @@ return (
     )}
 
     
-    {isAuthenticated && (
+    {!isAuthenticated && (
           <Nav.Link href="/Profile"><Button variant="outline-light">Home</Button></Nav.Link>
       )}
     

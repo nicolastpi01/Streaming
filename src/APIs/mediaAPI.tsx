@@ -16,6 +16,15 @@ export const searchSugestions = async (sugestions: string) => {
     return response.json()
 }
 
+export const sendVideo = async (media: FormData) : Promise<string> =>  {
+    const mediaByIdAPI = getServerAndPort + "/saveFile";
+    const response = await fetch(mediaByIdAPI, {
+        method: 'POST',
+        body:media
+    })
+    return response.json()
+}
+
 
 export const searchVideos = async (search: string) => {
     const searchAPI = getServerAndPort + "/search?busqueda=" + search

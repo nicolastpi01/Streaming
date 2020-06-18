@@ -13,8 +13,8 @@ const VideoCard: React.FC<VideosResult> = (props) => {
     });
 
     return (
-      <Card style={{ height: '25rem' }} onClick={()=>verVideo(props)} >
-        <Card.Img variant="bottom" src={props.imagenURL} />
+      <Card style={{maxHeight:"340px"}}>
+        <Card.Img variant="bottom" src={props.imagenURL}  onClick={()=>verVideo(props)}/>
         <Card.Body>
           <Card.Title>{props.nombre}</Card.Title>
           <Card.Text>

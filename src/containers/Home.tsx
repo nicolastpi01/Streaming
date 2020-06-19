@@ -151,19 +151,17 @@ useEffect((() =>
             catalogo.length > 0 ?
 
             
-              catalogo.map(video =>
-                
-                
-
-                  <VideoCard {...video}/>
+              catalogo.map((video) =>
+                  
+              <VideoCard {...video}/>
                                                    
               )
-             : <p>No hay resultados para su búsqueda</p>
+             : <h1>No hay resultados para su búsqueda</h1>
               
           }   
       </div>
 
-       
+       <br></br>
       <div className="row justify-content-center justify-items-center">
         <div className={classes.root} style={{textAlign: "center"}}>
           <Typography >Total: {size}</Typography>

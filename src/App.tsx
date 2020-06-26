@@ -17,11 +17,12 @@ import VideoCard from './components/VideoCard';
 
 
 const App : React.FC = () => {
-const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
+const { loading} = useAuth0();
 
 
 const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
-const [show, setShow] = useState(false);
+const [reload, setReload] = useState<boolean>(false);
+//const [show, setShow] = useState(false);
 
 // FOR PAGINING
 const [offset, setOffset] = useState<number>(0) // cantidad de videos por pagina
@@ -44,8 +45,11 @@ useEffect((() =>
     document.title = "Home"
     //console.log("THE CURRENT PAGE: " + currentPage)
     getAllVideos(currentPage)
+    setReload(false)
     
-  }), []);
+  }), [currentPage, reload]);
+
+  
 
   // Llama a la API que busca todos los videos
 const getAllVideos = async (page: number) => {
@@ -60,9 +64,19 @@ const getAllVideos = async (page: number) => {
     setPages(Math.ceil(result.size / result.offset))
   }).catch((e) => {})     
 } 
+/*
+let tryReload = () => {
+  setReload(true)
+} */
+
+if (loading ) {
+  return <div>Loading...</div>;
+}
   
 
 return (
+
+  
     <div className="App">
       <Router history={history}>
         <header>
@@ -98,7 +112,7 @@ return (
                     
                       catalogo.map((video) =>
                           
-                      <VideoCard {...video}/>
+                      <VideoCard videoResult ={video} reload={setReload}/>
                                                           
                       )
                     : <h1>No hay resultados para su búsqueda</h1>
@@ -110,7 +124,7 @@ return (
               <div className="row justify-content-center justify-items-center">
                 <div className={classes.root} style={{textAlign: "center"}}>
                   <Typography >Total: {size}</Typography>
-                  <Pagination count={pages} page={currentPage} onChange={handleChangePage} size= {"large"} color={"standard"} />
+                  <Pagination count={pages} page={currentPage} onChange={handleChangePage} showFirstButton showLastButton size= {"large"} color={"standard"} />
                 </div>
               </div> 
           </div>
@@ -118,12 +132,12 @@ return (
         <Switch>
           {/*<Route path="/" exact component={Home}/>
           todos los demas componentes deben tener Home abajo*/}
-          {isAuthenticated? 
+          {/*isAuthenticated? 
             <>
               <Route path="/profile" component={ViewUser} />
               <Route path="/video" component={Reproductor}/>
             </>:
-            <></>}
+          <></>*/}
         </Switch>
         </body>
       </Router>

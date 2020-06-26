@@ -2,7 +2,7 @@ import { VideosResult } from "../types/VideosResult";
 import { Card } from "react-bootstrap";
 import React, { useState } from 'react';
 import history from "../utils/history";
-
+import '../App.css';     //poner className="tarjetavideo" en la Card
     
 const VideoCard: React.FC<VideosResult> = (props) => {
   

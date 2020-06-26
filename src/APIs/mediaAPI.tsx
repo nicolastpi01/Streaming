@@ -25,6 +25,37 @@ export const sendVideo = async (media: FormData) : Promise<string> =>  {
     return response.json()
 }
 
+/*
+export const getByFilters = async (filters: SolicitudFilterRequest, reqExtras: RequestHeaders) => {
+    const response = await fetch(getURLs().SolicitudByFilter, {
+        method: 'POST',
+        body: JSON.stringify(filters),
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + await getFreshToken(reqExtras.msalInstance)
+        }
+    })
+    return response.json()
+} */
+
+export interface MgRequest {
+    mediaId: number,
+    
+}
+
+
+export const agregarMg = async (mediaId : MgRequest) =>  {
+    const likeAPI = getServerAndPort + "/like";
+    const response = await fetch(likeAPI, {
+        method: 'POST',
+        body: JSON.stringify(mediaId),
+        headers: {
+            'Content-Type': 'application/json' 
+        }
+    })
+    return response.json()
+}
+
 
 export const searchVideos = async (search: string) => {
     const searchAPI = getServerAndPort + "/search?busqueda=" + search

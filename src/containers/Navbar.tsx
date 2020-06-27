@@ -113,6 +113,7 @@ return (
                     <Dropdown.Item
                       //tag={RouterNavLink}
                       //to="/profile"
+                      onClick={()=>history.push("profile")}
                       className="dropdown-profile"
                       //activeClassName="router-link-exact-active"
                     >

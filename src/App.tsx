@@ -17,7 +17,7 @@ import VideoCard from './components/VideoCard';
 
 
 const App : React.FC = () => {
-const { loading} = useAuth0();
+const { loading, isAuthenticated} = useAuth0();
 
 
 const [catalogo, setCatalogo] = useState<VideosResult[]>([]);
@@ -132,12 +132,12 @@ return (
         <Switch>
           {/*<Route path="/" exact component={Home}/>
           todos los demas componentes deben tener Home abajo*/}
-          {/*isAuthenticated? 
+          {isAuthenticated? 
             <>
               <Route path="/profile" component={ViewUser} />
               <Route path="/video" component={Reproductor}/>
             </>:
-          <></>*/}
+          <></>}
         </Switch>
         </body>
       </Router>

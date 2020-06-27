@@ -38,7 +38,7 @@
   }
 }
 
-#mediapantalla {
+.mediapantalla {
   width:75%;
   height:60%;
 }
@@ -65,4 +65,16 @@ ul.pagination a.page-link {
 }
 ul.pagination a.page-link:hover {
   background-color: #f4f4f4;
+}
+
+.tarjetavideo{
+  max-width: 20%;
+  height: 100px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
 }
